@@ -1,4 +1,4 @@
-import exceptions
+import exceptions,os
 
 class FileController(object):
     """
@@ -19,7 +19,12 @@ class FileController(object):
         """
         Initiates the repository
         """
-        pass
+	try:
+		os.makedirs(self.directory)
+	except OSError, e:
+	        if e.errno != errno.EEXIST:
+        	    raise
+        
 
     def add(self,filename):
         """
@@ -35,7 +40,17 @@ class FileController(object):
         """
         pass
 
-    def clone(self):
+    def rename(self,newname):
+	if os.path.exists(newname):
+		raise DirectoryExist
+	else:
+		try:
+            		os.rename(self.directory, newname)
+        	except OSError, e:
+            		raise
+		
+
+    def clone(self,target):
         pass
 
     def log(self):
