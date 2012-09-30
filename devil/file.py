@@ -14,6 +14,7 @@ class FileController(object):
           FileController Object
         """
         self.directory = directory
+	self.dictionary = []
 
     def start(self):
         """
@@ -38,7 +39,17 @@ class FileController(object):
           FileOrDirectoryDoesNotExist : When the file or directory
           does not exist.
         """
-        pass
+	if (os.path.isfile(filename) == True):
+		self.dictionary.append((os.path.abspath(filename),'not commited'))
+	elif (os.path.isdir(filename) == True):
+		for f in os.listdir(filename):
+			if (os.path.isfile(f) == True): 
+				self.dictionary.append((os.path.abspath(f),'not commited'))
+			elif (os.path.isdir(f) == True):
+				self.add(f)
+	else:
+		raise FileOrDirectoryDoesNotExist()	
+
 
     def rename(self,newname):
 	if os.path.exists(newname):
