@@ -90,7 +90,12 @@ class FileController(object):
         pass
 
     def status(self):
-        pass
+        files=open('files.txt','U')
+	lines=files.readlines();
+	for line in lines:
+		path=line.split(" ")
+		if (path[1]== "notcommited\n"):
+			print line
 
     def pull(self,url):
         pass
