@@ -14,7 +14,7 @@ class FileController(object):
           FileController Object
         """
         self.directory = directory
-	self.dictionary = []
+	#self.dictionary = []
 
     def start(self):
         """
@@ -40,11 +40,30 @@ class FileController(object):
           does not exist.
         """
 	if (os.path.isfile(filename) == True):
-		self.dictionary.append((os.path.abspath(filename),'not commited'))
+		#self.dictionary.append((os.path.abspath(filename),'notcommited'))
+		files=open('files.txt','U')
+		lines=files.readlines();
+		files=open('files.txt','w')
+		for line in lines:
+			path=line.split(" ")
+			if(path[0] == os.path.abspath(filename)):
+				files.write(path[0] + " " + "notcommited\n")
+			else:
+				files.write(line)
+				
 	elif (os.path.isdir(filename) == True):
 		for f in os.listdir(filename):
 			if (os.path.isfile(f) == True): 
-				self.dictionary.append((os.path.abspath(f),'not commited'))
+				#self.dictionary.append((os.path.abspath(f),'notcommited'))
+				files=open('files.txt','U')
+				lines=files.readlines();
+				files=open('files.txt','w')
+				for line in lines:
+					path=line.split(" ")
+					if(path[0] == os.path.abspath(filename)):
+						files.write(path[0] + " " + "notcommited\n")
+					else:
+						files.write(line)
 			elif (os.path.isdir(f) == True):
 				self.add(f)
 	else:
