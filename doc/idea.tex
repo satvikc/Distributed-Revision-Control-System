@@ -45,12 +45,12 @@ system with basic features like commit, push patch, pull patch, view history,
 merging of code files, reverting changes etc.
 \end{abstract}
 \section{Introduction}
-
 \begin{wrapfigure}{r}{8cm}
 \centering
 \begin{tikzpicture}[ scale=0.6,transform shape]
-\tikzstyle{every node}=[circle,fill=gray!10]
-\draw (-3,-3) rectangle (8,6);
+\tikzstyle{every node}=[circle,fill=gray!40]
+\draw [fill=gray!10] (-3,-3) rectangle (8,6);
+\draw (2.5,-3) node [above,rectangle ,fill=gray!10] {Peer system};
 \node (a) at (0,0) {Networking system} ;
 \node (b) at (5,0) {Code Revision system};
 \node (c) at (2,4) {Controller};
@@ -84,7 +84,7 @@ keeping track of various versions of the code. It consists of
 \end{itemize}
 \subsection{User Interface/Controller}
 This will provide the actual interface which user will be able to use and this
-will cordinate the working of the other two components.
+will coordinate the working of the other two components.
 It consists of
 \begin{itemize}
 \item Defining a command line interface for linux machines and if possible a
