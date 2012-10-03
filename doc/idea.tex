@@ -1,5 +1,7 @@
 \documentclass[]{article}
 
+\usepackage{tikz}
+\usetikzlibrary{backgrounds}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -8,7 +10,7 @@
 \usepackage{multirow}
 \usepackage{times}
 \usepackage{fullpage}
-
+\usepackage{wrapfig}
 \newcommand{\comment}[1]{}
 
 \title{CS685: Group 14 \\
@@ -44,16 +46,51 @@ merging of code files, reverting changes etc.
 \end{abstract}
 \section{Introduction}
 
+\begin{wrapfigure}{r}{5cm}
+\centering
+\begin{tikzpicture}[ scale=0.8,transform shape]
+\tikzstyle{every node}=[circle,fill=gray!10]
+%\draw (-3,-3) rectangle (8,6);
+\node (a) at (0,0) {Networking system} ;
+\node (b) at (5,0) {Code Revision system};
+\node (c) at (2,4) {Controller};
+\draw [<->] (c) -- (a);
+\draw [<->] (c) -- (b);
+\end{tikzpicture}
+\end{wrapfigure}
 \section{Approach}
-We will devide the whole project into ? subsystems which consists of :
+We will devide the whole project into three subsystems which consists of :
 
 \subsection{Networking}
 Networking subsystem implements the underlying communication between the
-peers. It will consists of
+peers. It consists of
 \begin{itemize}
-\item Defining the underlying z
+\item Defining the underlying protocol for communication.
+\item Connecting to a peer and transferring the patches reported by the
+  revision system.
 \end{itemize}
 \subsection{Code Revision System}
+Code Revision system performs all the major tasks of creating patches and
+keeping track of various versions of the code. It consists of
+\begin{itemize}
+\item Creating patches based on changes in the files.
+\item Dermining what patches needs to be send to the peer depending on the
+  code version.
+\item Merging of the patches to the codebase.
+\end{itemize}
+\subsection{User Interface/Controller}
+This will provide the actual interface which user will be able to use and this
+will cordinate the working of the other two components.
+It consists of
+\begin{itemize}
+\item Defining a command line interface for linux machines and if possible a
+  gui interface may be considered.
+\item Defining the ususal commands like commit, push a patch, pull a patch
+  etc.
+\item This will act like a bridge between the networking subsystem and code
+  revision system and will combine the features of both to provide an end to
+  end distributed version control system.
+\end{itemize}
 \section{References}
 \begin{thebibliography}{99}
 \bibitem{wiki}
