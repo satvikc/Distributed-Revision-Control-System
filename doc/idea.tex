@@ -1,0 +1,72 @@
+\documentclass[]{article}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{times}
+\usepackage{fullpage}
+
+\newcommand{\comment}[1]{}
+
+\title{CS685: Group 14 \\
+Distributed Code Revision Control System}
+\author{
+\begin{tabular}{ccc}
+	Satvik Chauhan & Rahul Ajmera \\
+	\url{satvikc@iitk.ac.in} & \url{rahul@iitk.ac.in} \\
+	Dept. of CSE & Dept. of CSE \\
+	\multicolumn{2}{c}{Indian Institute of Technology, Kanpur}
+\end{tabular}
+}
+\date{	% replace by ``initial'' or ``final'' as appropriate
+\today}	% replace by actual date of submission or \today
+
+\begin{document}
+\maketitle
+\begin{abstract}
+A distributed revision control system (DRCS), distributed version control or
+decentralized version control system (DVCS) keeps track of software revisions
+and allows many developers to work on a given project without necessarily
+being connected to a common network \cite{wiki}. Some of the popular
+distributed version control systems are Git \cite{git}, Mercurial
+\cite{mercurial}, darc \cite{darcs}, GNU Bazaar \cite{bazaar} etc. Distributed Version Control
+Systems usually follow peer to peer approach rather than client server. So
+instead of a central repository to which each client can synchronize their
+changes, each peer has a working copy of the codebase. DVCS usually perform
+syncronizations by exchanging patches between peers.
+
+In this project we will be implementing a distributed version control
+system with basic features like commit, push patch, pull patch, view history,
+merging of code files, reverting changes etc.
+\end{abstract}
+\section{Introduction}
+
+\section{Approach}
+We will devide the whole project into ? subsystems which consists of :
+
+\subsection{Networking}
+Networking subsystem implements the underlying communication between the
+peers. It will consists of
+\begin{itemize}
+\item Defining the underlying z
+\end{itemize}
+\subsection{Code Revision System}
+\section{References}
+\begin{thebibliography}{99}
+\bibitem{wiki}
+wikipedia \url{http://en.wikipedia.org/wiki/Distributed_revision_control}
+\bibitem{git}
+git version control system \url{http://git-scm.com}
+\bibitem{mercurial}
+Matt Mackall, \emph{Towards a Better SCM: Revlog and Mercurial} .
+\bibitem{darcs}
+Judah Jacobson, \emph{A formalization of Darcs patch theory using inverse
+  semigroups}.
+\bibitem{bazaar}
+GNU Bazaar, \url{http://wiki.bazaar.canonical.com/}
+\end{thebibliography}
+
+\end{document}
