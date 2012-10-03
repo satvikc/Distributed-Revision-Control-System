@@ -46,16 +46,20 @@ merging of code files, reverting changes etc.
 \end{abstract}
 \section{Introduction}
 
-\begin{wrapfigure}{r}{5cm}
+\begin{wrapfigure}{r}{8cm}
 \centering
-\begin{tikzpicture}[ scale=0.8,transform shape]
+\begin{tikzpicture}[ scale=0.6,transform shape]
 \tikzstyle{every node}=[circle,fill=gray!10]
-%\draw (-3,-3) rectangle (8,6);
+\draw (-3,-3) rectangle (8,6);
 \node (a) at (0,0) {Networking system} ;
 \node (b) at (5,0) {Code Revision system};
 \node (c) at (2,4) {Controller};
+\node (f) at (10,0) {Code files};
+\node (u) at (-5,0) {Other  Peer};
 \draw [<->] (c) -- (a);
 \draw [<->] (c) -- (b);
+\draw [<->] (u) -- (a);
+\draw [<->] (b) -- (f);
 \end{tikzpicture}
 \end{wrapfigure}
 \section{Approach}
