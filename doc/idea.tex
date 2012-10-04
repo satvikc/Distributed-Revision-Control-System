@@ -44,8 +44,6 @@ In this project we will be implementing a distributed version control
 system with basic features like commit, push patch, pull patch, view history,
 merging of code files, reverting changes etc.
 \end{abstract}
-\section{Introduction}
-We will take a peer to peer approach for maintaining the code.Every peer will have its own copy of the project and can request other peers to merge their code with its own code.We will not keep a central repository, every working copy would behave as a database.This synchronization would be done by sending patches of data to the other node which would be determined by using difflib in python.After geting the difference of two files we will merge them, in case of a conflict in merging we will ask the user to merge it manually.\\
 \begin{wrapfigure}{r}{8cm}
 \centering
 \begin{tikzpicture}[ scale=0.6,transform shape]
@@ -63,6 +61,17 @@ We will take a peer to peer approach for maintaining the code.Every peer will ha
 \draw [<->] (b) -- (f);
 \end{tikzpicture}
 \end{wrapfigure}
+\section{Implementation}
+We will take a peer to peer approach for maintaining the code. Every peer will
+have its own copy of the codebase and can request other peers to merge their
+code with his own codecopy. Unlike CVS, we will not keep a central repository
+and every copy of the codebase will be a working copy. The syncronization
+between peers will be done by sending patches which will be determined by
+using a diff algorithm based on the version of the codes peers haves. We will
+keep snapshot for each commit and will follow the git's approach of
+compressing the snapshots into blobs \cite{parable}.
+
+
 \section{Approach}
 We will devide the whole project into three subsystems which consists of :
 
@@ -75,11 +84,11 @@ peers. It consists of
   revision system.
 \end{itemize}
 \subsection{Code Revision System}
-Code Revision system performs all the major tasks of creating patches and
+Code Revision system performs all the major tasks of creating blobs, patches and
 keeping track of various versions of the code. It consists of
 \begin{itemize}
-\item Creating patches based on changes in the files.
-\item Dermining what patches needs to be send to the peer depending on the
+\item Creating blobs and patches based on changes in the files.
+\item Determining what patches needs to be send to the peer depending on the
   code version.
 \item Merging of the patches to the codebase.
 \end{itemize}
@@ -90,13 +99,13 @@ It consists of
 \begin{itemize}
 \item Defining a command line interface for linux machines and if possible a
   gui interface may be considered.
-\item Defining the ususal commands like commit, push a patch, pull a patch
+\item Defining the ususal commands like commit, push changes, pull changes
   etc.
 \item This will act like a bridge between the networking subsystem and code
   revision system and will combine the features of both to provide an end to
   end distributed version control system.
 \end{itemize}
-\section{References}
+
 \begin{thebibliography}{99}
 \bibitem{wiki}
 wikipedia \url{http://en.wikipedia.org/wiki/Distributed_revision_control}
@@ -109,6 +118,8 @@ Judah Jacobson, \emph{A formalization of Darcs patch theory using inverse
   semigroups}.
 \bibitem{bazaar}
 GNU Bazaar, \url{http://wiki.bazaar.canonical.com/}
+\bibitem{parable}
+Git Parable, \url{http://tom.preston-werner.com/2009/05/19/the-git-parable.html}
 \end{thebibliography}
 
 \end{document}
