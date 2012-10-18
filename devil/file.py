@@ -1,3 +1,5 @@
+import exceptions
+
 class FileController(object):
     """
     Class to perform all the local functionalities of the version
