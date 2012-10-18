@@ -14,9 +14,23 @@ class FileController(object):
         self.directory = directory
 
     def start(self):
+        """
+        Initiates the repository
+        """
         pass
 
-    def add(self):
+    def add(self,filename):
+        """
+        Adds the given file or directory (all files and directories in
+        it) to the tracking system. You need to commit before the
+        files added are actually tracked.
+
+        Args:
+          filename(str) : file or directory name to add
+        Raises:
+          FileOrDirectoryDoesNotExist : When the file or directory
+          does not exist.
+        """
         pass
 
     def clone(self):
