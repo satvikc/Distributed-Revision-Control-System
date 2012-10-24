@@ -46,32 +46,32 @@ class FileController(object):
         Raises:
           FileOrDirectoryDoesNotExist : When the file or directory
           does not exist.
-        """
 	if (os.path.isfile(filename) == True or os.path.isdir(filename) == True):
-		#self.dictionary.append((os.path.abspath(filename),'notcommited'))
-		files=open(os.path.abspath('Devil/files.txt'),'U')
-		lines=files.readlines();
-		present=0
+	"""
+	#self.dictionary.append((os.path.abspath(filename),'notcommited'))
+	files=open(os.path.abspath('Devil/files.txt'),'U')
+	lines=files.readlines();
+	present=0
+	for line in lines:
+		path=line.split(" ")
+		if(path[0] == os.path.abspath(filename)):
+			present=1
+	if(present==0):
+		print "absent"
+		files=open(os.path.abspath('Devil/files.txt'),'w')
+		for line in lines:
+			files.write(line)
+		files.write(os.path.abspath(filename) + " " + "notcommited\n")
+		
+	elif(present==1):
+		files=open(os.path.abspath('Devil/files.txt'),'w')
 		for line in lines:
 			path=line.split(" ")
 			if(path[0] == os.path.abspath(filename)):
-				present=1
-		if(present==0):
-			print "absent"
-			files=open(os.path.abspath('Devil/files.txt'),'w')
-			for line in lines:
+				files.write(path[0] + " " + "notcommited\n")
+			else:
 				files.write(line)
-			files.write(os.path.abspath(filename) + " " + "notcommited\n")
-			
-		elif(present==1):
-			files=open(os.path.abspath('Devil/files.txt'),'w')
-			for line in lines:
-				path=line.split(" ")
-				if(path[0] == os.path.abspath(filename)):
-					files.write(path[0] + " " + "notcommited\n")
-				else:
-					files.write(line)
-    """				
+    """			
 	elif (os.path.isdir(filename) == True):
 		for f in os.listdir(filename):
 			if (os.path.isfile(f) == True): 
@@ -118,13 +118,16 @@ class FileController(object):
 	lines=files.readlines();
 	#os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
 	for line in lines:
+		#print line
 		path=line.split(" ")
 		if(path[1]=="notcommited\n"):
 			if(os.path.isfile(path[0])== True):
+				#print "in file ",path[0]
 				if not (os.path.exists(os.path.abspath('Devil')+'/object'+'/'+hashmap)):
 					os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
 				shutil.copy2(path[0],os.path.abspath('Devil')+'/object'+'/'+hashmap)
 			elif(os.path.isdir(path[0])== True):
+				print "in dir"
 				shutil.copytree(path[0],os.path.abspath('Devil')+'/object'+'/'+hashmap)
 	mfile=open(os.path.abspath('Devil')+'/object'+'/'+hashmap+'/'+'message.txt','w')
 	mfile.write(message)
@@ -149,7 +152,16 @@ class FileController(object):
         pass
 
     def log(self):
-        pass
+	uname=open(self.directory + '/Devil/'+'username.txt','U')
+	username=str(uname.readlines())
+	uname.close()
+        for files in os.listdir(os.path.abspath('Devil')+'/object'):
+		fordate=os.path.getmtime(os.path.abspath('Devil')+'/object/'+files)
+		date=datetime.datetime.fromtimestamp(int(fordate)).strftime('%Y-%m-%d %H:%M:%S')
+		print "Commit tag: ",str(files),"\n"
+		print "Author: ",username,"\n"
+		print "Time Stamp: ",date,"\n\n"
+		
 
     def diff(self):
         pass
