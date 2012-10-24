@@ -1,5 +1,5 @@
 #! /usr/bin/python
-import exceptions,os,shutil,hashlib,datetime
+import exceptions,os,shutil,hashlib,datetime,filecmp
 from optparse import OptionParser
 
 class FileController(object):
@@ -154,8 +154,11 @@ class FileController(object):
     def log(self):
         pass
 
-    def diff(self):
-        pass
+    def diff(self,commit1,commit2):
+        dir1=os.path.abspath('Devil/object/'+commit1)
+	dir2=os.path.abspath('Devil/object/'+commit2)
+	dc=filecmp.dircmp(dir1,dir2)
+	dc.report_full_closure()
 
     def status(self):
         files=open(os.path.abspath('Devil/files.txt'),'U')
@@ -182,6 +185,7 @@ def main():
     parser.add_option("-c", "--commit",help="commit the required changes", dest="commit",action= "store")
     parser.add_option("-s", "--status",help="all not commited files", dest="status",action= "store_true")
     parser.add_option("-l", "--log",help="complete list of commits", dest="log",action= "store_true")
+    parser.add_option("-d", "--diff",help="overview of difference", dest="diff",action= "store")
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
@@ -200,7 +204,10 @@ def main():
     elif options.log:
 	obj=FileController()
         obj.log()
-
+    elif options.diff:
+	clist=options.diff.split("..")
+	obj=FileController()
+	obj.diff(clist[0],clist[1])
 
 if __name__ == "__main__":
     main()
