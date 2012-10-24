@@ -1,4 +1,4 @@
-import exceptions,os
+import exceptions,os,shutil,hashlib,datetime
 
 class FileController(object):
     """
@@ -14,6 +14,7 @@ class FileController(object):
           FileController Object
         """
         self.directory = directory
+	self.username=''
 	#self.dictionary = []
 
     def start(self):
@@ -21,10 +22,12 @@ class FileController(object):
         Initiates the repository
         """
 	try:
-		os.makedirs(self.directory)
+		os.makedirs(self.directory + '/devil')
 	except OSError, e:
 	        if e.errno != errno.EEXIST:
         	    raise
+	username=raw_input("Enter username")
+	self.username=username
         
 
     def add(self,filename):
@@ -69,6 +72,20 @@ class FileController(object):
 	else:
 		raise FileOrDirectoryDoesNotExist()	
 
+    def commit(self,message):
+	#hashmap='lkfdsadf'
+	username=self.username
+	dateandtime=str(datetime.datetime.now())
+	hashmap=hashlib.sha224(username + dateandtime).hexdigest()
+	files=open('files.txt','U')
+	lines=files.readlines();
+	for line in lines:
+		path=line.split(" ")
+		if(path[1]=="commited\n"):
+			shutil.copy2(path[0],os.path.abspath('devil')+'/object'+'/'+hashmap)
+	mfile=open(os.path.abspath('devil')+'/object'+'/'+hashmap+'/'+'message.txt','w')
+	mfile.write(message)
+	mfile.close()
 
     def rename(self,newname):
 	if os.path.exists(newname):
