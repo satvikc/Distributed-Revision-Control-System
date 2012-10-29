@@ -1,7 +1,7 @@
 #! /usr/bin/python
 import exceptions,os,shutil,hashlib,datetime
 from optparse import OptionParser
-import util
+from utils import fileTracked,getUsername
 
 class FileController(object):
     """
@@ -17,9 +17,9 @@ class FileController(object):
           FileController Object
         """
         self.directory = os.getcwd()
-        print(self.directory)
-        #self.username=''
-        #self.dictionary = []
+        self.userfile = os.path.abspath(os.path.join(self.directory,'Devil','username.txt'))
+        self.trackingfile = os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
+        self.objectdir = os.path.abspath(os.path.join(self.directory,'Devil','object'))
 
     def start(self):
         """
@@ -30,9 +30,11 @@ class FileController(object):
         except OSError(e):
                 if e.errno != errno.EEXIST:
                     raise
-        username=input("Enter username:\n")
-        uname=open(self.directory + '/Devil/'+'username.txt','w')
-        uname.write(username)
+        username = input("Enter username:\n")
+        email = input("Enter email \n")
+        uname=open(self.userfile,'w')
+        uname.write(username+'\n')
+        uname.write(email+'\n')
         uname.close()
         files=open(self.directory + '/Devil/'+'files.txt','w')
         files.close()
@@ -50,23 +52,21 @@ class FileController(object):
           does not exist.
         if (os.path.isfile(filename) == True or os.path.isdir(filename) == True):
         """
-
-        present=fileTracked(filename,'Devil/files.txt')
-        if(present==0):
-            print("File added to tracking")
-            files=open(os.path.abspath('Devil/files.txt'),'a')
-            files.write(os.path.abspath(filename) + " " + "notcommited\n")
-            files.close()
-
-        elif(present==1):
-            print("File already tracked")
-
+        filename = os.path.abspath(filename)
+        if(os.path.isdir(filename)):
+            for i in os.listdir(filename):
+                self.add(i)
+        else:
+            if(fileTracked(filename,self.trackingfile)):
+                print(filename + " => File added to tracking")
+                files=open(self.trackingfile,'a')
+                files.write(filename + " => notcommited\n")
+                files.close()
+            else:
+                print(filename + " => File already tracked")
 
     def commit(self,message):
-        #hashmap='lkfdsadf'
-        uname=open(self.directory + '/Devil/'+'username.txt','U')
-        username=str(uname.readlines())
-        uname.close()
+        username,email = getUsername(self.userfile)
         dateandtime=str(datetime.datetime.now())
         hashmap=hashlib.sha224(username + dateandtime).hexdigest()
         files=open(os.path.abspath('Devil/files.txt'),'U')
@@ -137,6 +137,10 @@ class FileController(object):
 
     def revert(self,commit_hash):
         pass
+
+    # Helpers
+    def __objectname(hashtag):
+        return os.path.join(self.objectdir,hashtag)
 
 def main():
     usage = "usage: %prog [options] arg"
