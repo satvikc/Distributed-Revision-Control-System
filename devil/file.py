@@ -152,7 +152,15 @@ class FileController(object):
         pass
 
     def log(self):
-        pass
+	uname=open(self.directory + '/Devil/'+'username.txt','U')
+	username=str(uname.readlines())
+	uname.close()
+	for files in os.listdir(os.path.abspath('Devil')+'/object'):
+		fordate=os.path.getmtime(os.path.abspath('Devil')+'/object/'+files)
+		date=datetime.datetime.fromtimestamp(int(fordate)).strftime('%Y-%m-%d %H:%M:%S')
+		print "Commit tag: ",str(files),"\n"
+		print "Author: ",username,"\n"
+		print "Time Stamp: ",date,"\n\n"
 
     def diff(self,commit1,commit2):
         dir1=os.path.abspath('Devil/object/'+commit1)
