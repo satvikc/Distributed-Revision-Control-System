@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-import exceptions,os,shutil,hashlib,datetime,filecmp,base64
+import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys
 from optparse import OptionParser
 from utils import fileTracked,getUsername
 
@@ -100,10 +100,7 @@ class FileController(object):
                 files.write(path[0] + " commited\n")
         files.close()
         files=open(self.statusfile,'a')
-        files.write("commit "+hashmap+"\n")
-        files.write("Author "+username+email+"\n")
-        files.write("Date "+dateandtime+"\n")
-        files.write("\n\n\n")
+        files.write("commit "+hashmap+" "+username+" "+email+" "+dateandtime+"\n")
 
     def rename(self,newname):
         if os.path.exists(newname):
@@ -136,6 +133,13 @@ class FileController(object):
         lines=files.readlines();
         for line in lines:
                 print (line)
+    def diff(self,filename):
+        files=open(self.statusfile,'r')
+        a=files.readlines();
+        lastline=a[len(a)-1]
+        for_commit=lastline.split("commit ")
+        commit_tag=for_commit[1].split(" ")[0]
+         
 
     def pull(self,url):
         pass
@@ -147,8 +151,11 @@ class FileController(object):
         pass
 
     # Helpers
-    def __objectname(hashtag):
+    def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
+    def __returnfile(self,hastag,filename):
+        
+        
 
 def main():
     usage = "usage: %prog [options] arg"
@@ -158,7 +165,7 @@ def main():
     parser.add_option("-c", "--commit",help="commit the required changes", dest="commit",action= "store")
     parser.add_option("-s", "--status",help="all not commited files", dest="status",action= "store_true")
     parser.add_option("-l", "--log",help="complete list of commits", dest="log",action= "store_true")
-    parser.add_option("-h", "--change",help="overview of difference b/w two commits", dest="change",action= "store")
+    parser.add_option("--change",help="overview of difference b/w two commits", dest="change",action= "store")
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
@@ -180,7 +187,7 @@ def main():
     elif options.change:
         clist=options.change.split("..")
         obj=FileController()
-        obj.diff(clist[0],clist[1])
+        obj.change(clist[0],clist[1])
 
 if __name__ == "__main__":
     main()
