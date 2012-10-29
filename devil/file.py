@@ -1,5 +1,5 @@
-#! /usr/bin/python
-import exceptions,os,shutil,hashlib,datetime,filecmp
+#! /usr/bin/python3
+import exceptions,os,shutil,hashlib,datetime,filecmp,base64
 from optparse import OptionParser
 from utils import fileTracked,getUsername
 
@@ -18,10 +18,11 @@ class FileController(object):
           FileController Object
         """
         self.directory = os.getcwd()
-	self.statusfile = os.path.abspath(os.path.join(self.directory,'Devil','status.txt'))
-	self.userfile=os.path.abspath(os.path.join(self.directory,'Devil','username.txt'))
-	self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
+        self.statusfile = os.path.abspath(os.path.join(self.directory,'Devil','status.txt'))
+        self.userfile=os.path.abspath(os.path.join(self.directory,'Devil','username.txt'))
+        self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
         self.objectdir = os.path.abspath(os.path.join(self.directory,'Devil','object'))
+        self.devil=os.path.abspath(os.path.join(self.directory,'Devil'))
 
     def start(self):
         """
@@ -29,7 +30,7 @@ class FileController(object):
         """
 
         try:
-                os.makedirs(self.directory + '/Devil')
+                os.makedirs(self.devil)
         except OSError(e):
                 if e.errno != errno.EEXIST:
                     raise
@@ -39,10 +40,10 @@ class FileController(object):
         uname.write(username+'\n')
         uname.write(email+'\n')
         uname.close()
-        files=open(self.directory + '/Devil/'+'files.txt','w')
+        files=open(self.trackingfile,'w')
         files.close()
-	files=open(self.directory + '/Devil/'+'status.txt','w')
-	files.close()
+        files=open(self.statusfile,'w')
+        files.close()
 
     def add(self,filename):
         """
@@ -59,12 +60,12 @@ class FileController(object):
         filename = os.path.abspath(filename)
         if(os.path.isdir(filename)):
             for i in os.listdir(filename):
-                self.add(i)
+                self.add(os.path.join(filename,i))
         else:
             if(fileTracked(filename,self.trackingfile)):
                 print(filename + " => File added to tracking")
                 files=open(self.trackingfile,'a')
-                files.write(filename + " => notcommited\n")
+                files.write(filename + " notcommited\n")
                 files.close()
             else:
                 print(filename + " => File already tracked")
@@ -72,8 +73,8 @@ class FileController(object):
     def commit(self,message):
         username,email = getUsername(self.userfile)
         dateandtime=str(datetime.datetime.now())
-        hashmap=hashlib.sha224(username + dateandtime).hexdigest()
-        files=open(os.path.abspath('Devil/files.txt'),'U')
+        hashmap=hashlib.sha224(base64.b64encode((username+email+dateandtime).encode('ascii'))).hexdigest()
+        files=open(self.trackingfile,'r')
         lines=files.readlines();
         #os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
         for line in lines:
@@ -82,20 +83,22 @@ class FileController(object):
                 if(path[1]=="notcommited\n"):
                         if(os.path.isfile(path[0])== True):
                                 #print "in file ",path[0]
-                                if not (os.path.exists(os.path.abspath('Devil')+'/object'+'/'+hashmap)):
-                                        os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
-                                shutil.copy2(path[0],os.path.abspath('Devil')+'/object'+'/'+hashmap)
+                                if not (os.path.exists(os.path.join(self.objectdir,hashmap))):
+                                        os.makedirs(os.path.join(self.objectdir,hashmap))
+                                shutil.copy2(path[0],os.path.join(self.objectdir,hashmap))
                         elif(os.path.isdir(path[0])== True):
                                 print("in dir")
-                                shutil.copytree(path[0],os.path.abspath('Devil')+'/object'+'/'+hashmap)
-        mfile=open(os.path.abspath('Devil')+'/object'+'/'+hashmap+'/'+'message.txt','w')
-        mfile.write(message)
-        mfile.close()
-        files=open(os.path.abspath('Devil/files.txt'),'w')
+                                shutil.copytree(path[0],os.path.join(self.objectdir,hashmap))
+        files=open(self.trackingfile,'w')
         for line in lines:
                 path=line.split(" ")
                 files.write(path[0] + " commited\n")
         files.close()
+        files=open(self.statusfile,'a')
+        files.write("commit "+hashmap+"\n")
+        files.write("Author "+username+email+"\n")
+        files.write("Date "+dateandtime+"\n")
+        files.write("\n\n\n")
 
     def rename(self,newname):
         if os.path.exists(newname):
@@ -111,28 +114,23 @@ class FileController(object):
         pass
 
     def log(self):
-	#uname=open(self.directory + '/Devil/'+'username.txt','U')
-	username,email=getUsername(self.userfile)
-	#uname.close()
-	for files in os.listdir(os.path.abspath('Devil')+'/object'):
-		fordate=os.path.getmtime(os.path.abspath('Devil')+'/object/'+files)
-		date=datetime.datetime.fromtimestamp(int(fordate)).strftime('%Y-%m-%d %H:%M:%S')
-		print "Commit tag: ",str(files),"\n"
-		print "Author: ",username,email"\n"
-		print "Time Stamp: ",date,"\n\n"
+        files=open(self.statusfile)
+        lines=files.readlines();
+        for line in lines:
+                print (line)
 
 
     def diff(self,commit1,commit2):
         dir1=os.path.abspath(os.path.join(self.objectdir,commit1))
-	dir2=os.path.abspath(os.path.join(self.objectdir,commit2))
-	dc=filecmp.dircmp(dir1,dir2)
-	dc.report_full_closure()
+        dir2=os.path.abspath(os.path.join(self.objectdir,commit2))
+        dc=filecmp.dircmp(dir1,dir2)
+        dc.report_full_closure()
 
     def status(self):
-        files=open(self.statusfile)
-	lines=files.readlines();
-	for line in lines:
-		print line
+        files=open(self.trackingfile)
+        lines=files.readlines();
+        for line in lines:
+                print (line)
 
     def pull(self,url):
         pass
@@ -175,9 +173,9 @@ def main():
         obj=FileController()
         obj.log()
     elif options.diff:
-	clist=options.diff.split("..")
-	obj=FileController()
-	obj.diff(clist[0],clist[1])
+        clist=options.diff.split("..")
+        obj=FileController()
+        obj.diff(clist[0],clist[1])
 
 if __name__ == "__main__":
     main()
