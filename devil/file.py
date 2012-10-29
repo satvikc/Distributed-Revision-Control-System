@@ -1,5 +1,5 @@
 #! /usr/bin/python
-import exceptions,os,shutil,hashlib,datetime
+import exceptions,os,shutil,hashlib,datetime,filecmp
 from optparse import OptionParser
 from utils import fileTracked,getUsername
 
@@ -50,8 +50,8 @@ class FileController(object):
         Raises:
           FileOrDirectoryDoesNotExist : When the file or directory
           does not exist.
-        if (os.path.isfile(filename) == True or os.path.isdir(filename) == True):
         """
+
         filename = os.path.abspath(filename)
         if(os.path.isdir(filename)):
             for i in os.listdir(filename):
@@ -93,6 +93,7 @@ class FileController(object):
                 files.write(path[0] + " commited\n")
         files.close()
 
+
     def rename(self,newname):
         if os.path.exists(newname):
                 raise DirectoryExist
@@ -107,19 +108,22 @@ class FileController(object):
         pass
 
     def log(self):
-        uname=open(self.directory + '/Devil/'+'username.txt','U')
-        username=str(uname.readlines())
-        uname.close()
-        for files in os.listdir(os.path.abspath('Devil')+'/object'):
-                fordate=os.path.getmtime(os.path.abspath('Devil')+'/object/'+files)
-                date=datetime.datetime.fromtimestamp(int(fordate)).strftime('%Y-%m-%d %H:%M:%S')
-                print ("Commit tag: ",str(files),"\n")
-                print ("Author: ",username,"\n")
-                print ("Time Stamp: ",date,"\n\n")
+	uname=open(self.directory + '/Devil/'+'username.txt','U')
+	username=str(uname.readlines())
+	uname.close()
+	for files in os.listdir(os.path.abspath('Devil')+'/object'):
+		fordate=os.path.getmtime(os.path.abspath('Devil')+'/object/'+files)
+		date=datetime.datetime.fromtimestamp(int(fordate)).strftime('%Y-%m-%d %H:%M:%S')
+		print "Commit tag: ",str(files),"\n"
+		print "Author: ",username,"\n"
+		print "Time Stamp: ",date,"\n\n"
 
 
-    def diff(self):
-        pass
+    def diff(self,commit1,commit2):
+        dir1=os.path.abspath('Devil/object/'+commit1)
+	dir2=os.path.abspath('Devil/object/'+commit2)
+	dc=filecmp.dircmp(dir1,dir2)
+	dc.report_full_closure()
 
     def status(self):
         files=open(os.path.abspath('Devil/files.txt'),'U')
@@ -150,6 +154,7 @@ def main():
     parser.add_option("-c", "--commit",help="commit the required changes", dest="commit",action= "store")
     parser.add_option("-s", "--status",help="all not commited files", dest="status",action= "store_true")
     parser.add_option("-l", "--log",help="complete list of commits", dest="log",action= "store_true")
+    parser.add_option("-d", "--diff",help="overview of difference", dest="diff",action= "store")
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
@@ -168,7 +173,10 @@ def main():
     elif options.log:
         obj=FileController()
         obj.log()
-
+    elif options.diff:
+	clist=options.diff.split("..")
+	obj=FileController()
+	obj.diff(clist[0],clist[1])
 
 if __name__ == "__main__":
     main()
