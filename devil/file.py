@@ -1,6 +1,7 @@
 #! /usr/bin/python
 import exceptions,os,shutil,hashlib,datetime
 from optparse import OptionParser
+import util
 
 class FileController(object):
     """
@@ -16,24 +17,25 @@ class FileController(object):
           FileController Object
         """
         self.directory = os.getcwd()
-	#self.username=''
-	#self.dictionary = []
-	
+        print(self.directory)
+        #self.username=''
+        #self.dictionary = []
+
     def start(self):
         """
         Initiates the repository
         """
-	try:
-		os.makedirs(self.directory + '/Devil')
-	except OSError, e:
-	        if e.errno != errno.EEXIST:
-        	    raise
-	username=raw_input("Enter username:\n")
-	uname=open(self.directory + '/Devil/'+'username.txt','w')
-	uname.write(username)
-	uname.close()
-	files=open(self.directory + '/Devil/'+'files.txt','w')
-	files.close()
+        try:
+                os.makedirs(self.directory + '/Devil')
+        except OSError(e):
+                if e.errno != errno.EEXIST:
+                    raise
+        username=input("Enter username:\n")
+        uname=open(self.directory + '/Devil/'+'username.txt','w')
+        uname.write(username)
+        uname.close()
+        files=open(self.directory + '/Devil/'+'files.txt','w')
+        files.close()
 
     def add(self,filename):
         """
@@ -46,133 +48,86 @@ class FileController(object):
         Raises:
           FileOrDirectoryDoesNotExist : When the file or directory
           does not exist.
-	if (os.path.isfile(filename) == True or os.path.isdir(filename) == True):
-	"""
-	#self.dictionary.append((os.path.abspath(filename),'notcommited'))
-	files=open(os.path.abspath('Devil/files.txt'),'U')
-	lines=files.readlines();
-	present=0
-	for line in lines:
-		path=line.split(" ")
-		if(path[0] == os.path.abspath(filename)):
-			present=1
-	if(present==0):
-		print "absent"
-		files=open(os.path.abspath('Devil/files.txt'),'w')
-		for line in lines:
-			files.write(line)
-		files.write(os.path.abspath(filename) + " " + "notcommited\n")
-		
-	elif(present==1):
-		files=open(os.path.abspath('Devil/files.txt'),'w')
-		for line in lines:
-			path=line.split(" ")
-			if(path[0] == os.path.abspath(filename)):
-				files.write(path[0] + " " + "notcommited\n")
-			else:
-				files.write(line)
-    """			
-	elif (os.path.isdir(filename) == True):
-		for f in os.listdir(filename):
-			if (os.path.isfile(f) == True): 
-				#self.dictionary.append((os.path.abspath(f),'notcommited'))
-				files=open(os.path.abspath('Devil/files.txt'),'U')
-				lines=files.readlines();
-				present=0
-				for line in lines:
-					path=line.split(" ")
-					if(path[0] == os.path.abspath(filename + '/' + f)):
-						present=1
-				if(present==0):
-					print "first time"
-					files=open(os.path.abspath('Devil/files.txt'),'w')
-					for line in lines:
-						files.write(line)
-					files.write(os.path.abspath(filename + '/' + f) + " " + "notcommited\n")
-			
-				elif(present==1):
-					print "not first time"
-					files=open(os.path.abspath('Devil/files.txt'),'w')
-					for line in lines:
-						path=line.split(" ")
-						if(path[0] == os.path.abspath(filename + '/' + f)):
-							files.write(path[0] + " " + "notcommited\n")
-						else:
-							files.write(line)
-			elif (os.path.isdir(filename + '/' + f) == True):
-				print "adding subdirectory"
-				self.add(filename + '/' + f)
+        if (os.path.isfile(filename) == True or os.path.isdir(filename) == True):
+        """
 
-	else:
-		x=0#raise FileOrDirectoryDoesNotExist()	
-    """
+        present=fileTracked(filename,'Devil/files.txt')
+        if(present==0):
+            print("File added to tracking")
+            files=open(os.path.abspath('Devil/files.txt'),'a')
+            files.write(os.path.abspath(filename) + " " + "notcommited\n")
+            files.close()
+
+        elif(present==1):
+            print("File already tracked")
+
 
     def commit(self,message):
-	#hashmap='lkfdsadf'
-	uname=open(self.directory + '/Devil/'+'username.txt','U')
-	username=str(uname.readlines())
-	uname.close()
-	dateandtime=str(datetime.datetime.now())
-	hashmap=hashlib.sha224(username + dateandtime).hexdigest()
-	files=open(os.path.abspath('Devil/files.txt'),'U')
-	lines=files.readlines();
-	#os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
-	for line in lines:
-		#print line
-		path=line.split(" ")
-		if(path[1]=="notcommited\n"):
-			if(os.path.isfile(path[0])== True):
-				#print "in file ",path[0]
-				if not (os.path.exists(os.path.abspath('Devil')+'/object'+'/'+hashmap)):
-					os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
-				shutil.copy2(path[0],os.path.abspath('Devil')+'/object'+'/'+hashmap)
-			elif(os.path.isdir(path[0])== True):
-				print "in dir"
-				shutil.copytree(path[0],os.path.abspath('Devil')+'/object'+'/'+hashmap)
-	mfile=open(os.path.abspath('Devil')+'/object'+'/'+hashmap+'/'+'message.txt','w')
-	mfile.write(message)
-	mfile.close()
-	files=open(os.path.abspath('Devil/files.txt'),'w')
-	for line in lines:
-		path=line.split(" ")
-		files.write(path[0] + " commited\n")
-	files.close()
+        #hashmap='lkfdsadf'
+        uname=open(self.directory + '/Devil/'+'username.txt','U')
+        username=str(uname.readlines())
+        uname.close()
+        dateandtime=str(datetime.datetime.now())
+        hashmap=hashlib.sha224(username + dateandtime).hexdigest()
+        files=open(os.path.abspath('Devil/files.txt'),'U')
+        lines=files.readlines();
+        #os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
+        for line in lines:
+                #print line
+                path=line.split(" ")
+                if(path[1]=="notcommited\n"):
+                        if(os.path.isfile(path[0])== True):
+                                #print "in file ",path[0]
+                                if not (os.path.exists(os.path.abspath('Devil')+'/object'+'/'+hashmap)):
+                                        os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
+                                shutil.copy2(path[0],os.path.abspath('Devil')+'/object'+'/'+hashmap)
+                        elif(os.path.isdir(path[0])== True):
+                                print("in dir")
+                                shutil.copytree(path[0],os.path.abspath('Devil')+'/object'+'/'+hashmap)
+        mfile=open(os.path.abspath('Devil')+'/object'+'/'+hashmap+'/'+'message.txt','w')
+        mfile.write(message)
+        mfile.close()
+        files=open(os.path.abspath('Devil/files.txt'),'w')
+        for line in lines:
+                path=line.split(" ")
+                files.write(path[0] + " commited\n")
+        files.close()
 
     def rename(self,newname):
-	if os.path.exists(newname):
-		raise DirectoryExist
-	else:
-		try:
-            		os.rename(self.directory, newname)
-        	except OSError, e:
-            		raise
-		
+        if os.path.exists(newname):
+                raise DirectoryExist
+        else:
+                try:
+                            os.rename(self.directory, newname)
+                except OSError(e):
+                            raise
+
 
     def clone(self,target):
         pass
 
     def log(self):
-	uname=open(self.directory + '/Devil/'+'username.txt','U')
-	username=str(uname.readlines())
-	uname.close()
+        uname=open(self.directory + '/Devil/'+'username.txt','U')
+        username=str(uname.readlines())
+        uname.close()
         for files in os.listdir(os.path.abspath('Devil')+'/object'):
-		fordate=os.path.getmtime(os.path.abspath('Devil')+'/object/'+files)
-		date=datetime.datetime.fromtimestamp(int(fordate)).strftime('%Y-%m-%d %H:%M:%S')
-		print "Commit tag: ",str(files),"\n"
-		print "Author: ",username,"\n"
-		print "Time Stamp: ",date,"\n\n"
-		
+                fordate=os.path.getmtime(os.path.abspath('Devil')+'/object/'+files)
+                date=datetime.datetime.fromtimestamp(int(fordate)).strftime('%Y-%m-%d %H:%M:%S')
+                print ("Commit tag: ",str(files),"\n")
+                print ("Author: ",username,"\n")
+                print ("Time Stamp: ",date,"\n\n")
+
 
     def diff(self):
         pass
 
     def status(self):
         files=open(os.path.abspath('Devil/files.txt'),'U')
-	lines=files.readlines();
-	for line in lines:
-		path=line.split(" ")
-		if (path[1]== "notcommited\n"):
-			print "File	",path[0],"	",path[1]
+        lines=files.readlines();
+        for line in lines:
+                path=line.split(" ")
+                if (path[1]== "notcommited\n"):
+                        print("File        ",path[0],"        ",path[1])
 
     def pull(self,url):
         pass
@@ -194,20 +149,20 @@ def main():
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
-	obj=FileController()
-	obj.start()
+        obj=FileController()
+        obj.start()
     elif options.add:
-	obj=FileController()
-	#print options.add
-	obj.add(options.add)
+        obj=FileController()
+        #print options.add
+        obj.add(options.add)
     elif options.commit:
-	obj=FileController()
-	obj.commit(options.commit)
+        obj=FileController()
+        obj.commit(options.commit)
     elif options.status:
-	obj=FileController()
-	obj.status()
+        obj=FileController()
+        obj.status()
     elif options.log:
-	obj=FileController()
+        obj=FileController()
         obj.log()
 
 
