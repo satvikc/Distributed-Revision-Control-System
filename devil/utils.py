@@ -26,4 +26,3 @@ def getHashNameFromHashmap(hashfile,name):
         if sp[0] == name:
             return sp[1]
     return None 
-

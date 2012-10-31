@@ -1,8 +1,10 @@
 #! /usr/bin/python3
 #should not be there
-import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys,zlib
+import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys,zlib,tempfile
 from optparse import OptionParser
 from utils import fileTracked,getUsername,getHashNameFromHashmap
+from contextlib import closing
+from zipfile import ZipFile, ZIP_DEFLATED
 
 
 class FileController(object):
@@ -10,7 +12,7 @@ class FileController(object):
     Class to perform all the local functionalities of the version
     control system.
     """
-    def __init__(self):
+    def __init__(self,dirc):
         """
         Args:
           directory(str): Full path of the directory where the
@@ -18,7 +20,7 @@ class FileController(object):
         Returns:
           FileController Object
         """
-        self.directory = os.getcwd()
+        self.directory = dirc
         self.statusfile = os.path.abspath(os.path.join(self.directory,'Devil','status.txt'))
         self.userfile=os.path.abspath(os.path.join(self.directory,'Devil','username.txt'))
         self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
@@ -134,14 +136,14 @@ class FileController(object):
         dc.report_full_closure()
 
     def status(self):
-        files=open(self.trackingfile)
+        files=open(self.statusfile)
         lines=files.readlines();
         for line in lines:
-            line = line.split(" ")
-            print("Commit: ",line[0])
-            print("Author: ",line[1])
-            print("Email: ",line[2])
-            print("Date: ",line[3])
+            line = line.split()
+            print("Commit: ",line[1])
+            print("Author: ",line[2])
+            print("Email: ",line[3])
+            print("Date: ",line[4])
 
 
     def diff(self,filename):
@@ -175,6 +177,26 @@ class FileController(object):
                 files.write(content)
                 files.close()
 
+
+    def merge(self,directory):
+        commits = getCommits(directory)
+        print(commits)
+        mycommits = self.getAllCommits()
+        commits_to_fetch = set(commits).difference(set(mycommits))
+        fp = open(self.statusfile,'a')
+        for k in commits_to_fetch:
+            i = k.split()
+            committag = i[1]
+            print(committag)
+            cont = getCommitsContent(directory,committag)
+            self.uncompressAndWrite(committag,cont)
+            # add to status file
+            print(k)
+            fp.write(k)
+        fp.close()
+
+
+
     # Helpers
     def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
@@ -199,6 +221,65 @@ class FileController(object):
         fp.close()
         return content
 
+    def getAllCommits(self):
+        fp = open(self.statusfile)
+        lines = fp.readlines()
+        fp.close()
+        return lines
+
+    def compressAndSend(self,commit): #warning doesnot handle empty directory
+        tempdir = tempfile.gettempdir()
+        archivename = os.path.join(tempdir,commit+'.zip')
+        zipdir(os.path.join(self.objectdir,commit),archivename)
+        fp = open(archivename,'rb')
+        contents = fp.read()
+        fp.close()
+        return contents
+
+    def uncompressAndWrite(self,commit,content):
+        tempdir = tempfile.gettempdir()
+        archivename = os.path.join(tempdir,commit+'.zip')
+        if not os.path.isfile(archivename):
+            fp = open(archivename,'wb')
+            fp.write(content)
+            fp.close()
+        extractto = os.path.join(self.objectdir,commit)
+        os.makedirs(extractto)
+        unzipdir(extractto,archivename)
+
+
+
+
+
+
+
+# Merge helpers. Remove them when you implement over network.
+
+def getCommits(d):
+    f = FileController(d)
+    return f.getAllCommits()
+
+def getCommitsContent(d,c):
+    f = FileController(d)
+    return f.compressAndSend(c)
+
+def zipdir(basedir, archivename):
+    assert os.path.isdir(basedir)
+    with closing(ZipFile(archivename, "w", ZIP_DEFLATED)) as z:
+        for root, dirs, files in os.walk(basedir):
+            #NOTE: ignore empty directories
+            for fn in files:
+                absfn = os.path.join(root, fn)
+                zfn = absfn[len(basedir)+len(os.sep):] #XXX: relative path
+                z.write(absfn, zfn)
+
+def unzipdir(targetdir, archivename):
+    assert os.path.isdir(targetdir)
+    assert os.path.isfile(archivename)
+    zip_file = ZipFile(archivename, 'r')
+    zip_file.extractall(targetdir)
+
+    zip_file.close()
 
 def main():
     usage = "usage: %prog [options] arg"
@@ -214,27 +295,27 @@ def main():
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.start()
     elif options.add:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         #print options.add
         obj.add(options.add)
     elif options.commit:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.commit(options.commit)
     elif options.status:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.status()
     elif options.log:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.log()
     elif options.change:
         clist=options.change.split("..")
         obj=FileController()
         obj.change(clist[0],clist[1])
     elif options.diff:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.diff(options.diff)
     elif options.revert:
         obj=FileController()
