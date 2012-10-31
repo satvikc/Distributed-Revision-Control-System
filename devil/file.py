@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys
+import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys,zlib
 from optparse import OptionParser
 from utils import fileTracked,getUsername,getHashNameFromHashmap
 
@@ -174,10 +174,9 @@ class FileController(object):
         object = os.path.join(self.objectdir,committag)
         hashmap = os.path.join(object,self.newhashmap)
         h = getHashNameFromHashmap(hashmap,filename)
-        fp = open(os.path.join(object,h))
+        fp = zlib.open(os.path.join(object,h))
         content = fp.readlines()
         fp.close()
-        print(content)
         return content
 
 
