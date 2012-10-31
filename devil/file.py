@@ -175,9 +175,6 @@ class FileController(object):
                 files.write(content)
                 files.close()
 
-    def merge(self,directory):
-        filecmp.dircmp(self.directory,directory)
-        
     # Helpers
     def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
