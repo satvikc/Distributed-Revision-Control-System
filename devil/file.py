@@ -91,7 +91,7 @@ class FileController(object):
                                 files=open(path[0],'r')
                                 content=files.readlines()
                                 files.close()
-                                newhashmap=hashlib.sha224(base64.b64encode((content).encode('ascii'))).hexdigest()
+                                newhashmap=hashlib.sha224(base64.b64encode((str(content)).encode('ascii'))).hexdigest()
                                 files=open(os.path.join(self.objectdir,hashmap,'newhashmap.txt'),'a')
                                 files.write(path[0]+"   "+newhashmap+"\n")
                                 shutil.copy2(path[0],os.path.join(self.objectdir,hashmap,newhashmap))
@@ -167,9 +167,12 @@ class FileController(object):
         files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash,self.newhashmap)),'r')
         a=files.readlines()
         for line in a:
-                hashtag=line.split(" ")[1]
-                content=function(hashtag)
-                files=open(filename)
+                filename=line.split(" ")[0]
+                content=self.__getFile(commit_hash,filename)
+                files=open('dummy.txt','w')
+                files.write(content)
+                files.close()
+                shutil.copy(os.path.abspath('dummy.txt'),self.directory)
 
     # Helpers
     def __objectname(self,hashtag):
