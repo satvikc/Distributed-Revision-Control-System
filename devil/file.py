@@ -171,10 +171,10 @@ class FileController(object):
         for line in a:
                 filename=line.split(" ")[0]
                 content=self.__getFiler(commit_hash,filename)
-                files=open('dummy.txt','w')
+                files=open(os.path.join(self.directory,filename),'w')
                 files.write(content)
                 files.close()
-                shutil.copy(os.path.abspath('dummy.txt'),os.path.join(self.directory,filename))
+                #shutil.copy(os.path.abspath('dummy.txt'),os.path.join(self.directory,filename))
 
     # Helpers
     def __objectname(self,hashtag):
