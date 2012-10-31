@@ -12,8 +12,9 @@ def fileTracked(filename,tracking_file):
 
 def getUsername(ufile):
     f = open(ufile,'r')
-    username = str(f.readline())
-    email = str(f.readline())
+    lines = f.read().splitlines()
+    username = str(lines[0])
+    email = str(lines[1])
     f.close()
     return (username,email)
 

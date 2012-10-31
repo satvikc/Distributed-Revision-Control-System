@@ -3,7 +3,7 @@ import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys
 from optparse import OptionParser
 from utils import fileTracked,getUsername
 
-	
+
 class FileController(object):
     """
     Class to perform all the local functionalities of the version
@@ -133,7 +133,13 @@ class FileController(object):
         files=open(self.trackingfile)
         lines=files.readlines();
         for line in lines:
-                print (line)
+            line = line.split(" ")
+            print("Commit: ",line[0])
+            print("Author: ",line[1])
+            print("Email: ",line[2])
+            print("Date: ",line[3])
+
+ 
     def diff(self,filename):
         files=open(self.statusfile,'r')
         a=files.readlines();
@@ -147,7 +153,6 @@ class FileController(object):
         c=__getFile(commit_tag,os.path.abspath(os.path.join(self.directory,filename)))
         print(difflib.ndiff(b,c))
         
-         
 
     def pull(self,url):
         pass
