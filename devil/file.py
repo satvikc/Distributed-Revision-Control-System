@@ -130,7 +130,8 @@ class FileController(object):
         files=open(self.trackingfile)
         lines=files.readlines();
         for line in lines:
-            print("commit: ",line[0])
+            line = line.split(" ")
+            print("Commit: ",line[0])
             print("Author: ",line[1])
             print("Email: ",line[2])
             print("Date: ",line[3])
