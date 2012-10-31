@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 import exceptions,os,shutil,hashlib,datetime,filecmp,base64
 from optparse import OptionParser
-from utils import fileTracked,getUsername
+from utils import fileTracked,getUsername,getHashNameFromHashmap
 
 
 class FileController(object):
@@ -144,11 +144,22 @@ class FileController(object):
         pass
 
     def revert(self,commit_hash):
-        pass
+
 
     # Helpers
     def __objectname(hashtag):
         return os.path.join(self.objectdir,hashtag)
+
+    def __getFile(committag,filename):
+        object = os.path.join(self.objectdir,committag)
+        hashmap = os.path.join(object,self.newhashmap)
+        h = getHashNameFromHashmap(hashmap,filename)
+        fp = open(os.path.join(object,h))
+        content = fp.readlines()
+        fp.close()
+        return content
+
+
 
 def main():
     usage = "usage: %prog [options] arg"
