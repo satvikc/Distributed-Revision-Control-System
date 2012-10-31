@@ -22,7 +22,7 @@ def getHashNameFromHashmap(hashfile,name):
     fp = open(hashfile,'r')
     lines = fp.read().splitlines()
     for line in lines:
-        sp = line.split(" ")
+        sp = line.split()
         if sp[0] == name:
             return sp[1]
     return None 

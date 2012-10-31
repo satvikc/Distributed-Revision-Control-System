@@ -23,7 +23,7 @@ class FileController(object):
         self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
         self.objectdir = os.path.abspath(os.path.join(self.directory,'Devil','object'))
         self.devil=os.path.abspath(os.path.join(self.directory,'Devil'))
-        sellf.newhashmap='newhashmap.txt'
+        self.newhashmap='newhashmap.txt'
 
     def start(self):
         """
@@ -139,7 +139,7 @@ class FileController(object):
             print("Email: ",line[2])
             print("Date: ",line[3])
 
- 
+
     def diff(self,filename):
         files=open(self.statusfile,'r')
         a=files.readlines();
@@ -150,9 +150,10 @@ class FileController(object):
         files.close()
         for_commit=lastline.split("commit ")
         commit_tag=for_commit[1].split(" ")[0]
-        c=__getFile(commit_tag,os.path.abspath(os.path.join(self.directory,filename)))
-        print(difflib.ndiff(b,c))
-        
+        c=self.__getFile(commit_tag,os.path.abspath(os.path.join(self.directory,filename)))
+        for line in difflib.ndiff(c,b):
+            print(line)
+
 
     def pull(self,url):
         pass
@@ -161,21 +162,22 @@ class FileController(object):
         pass
 
     def revert(self,commit_hash):
-
+        pass
 
     # Helpers
     def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
-        
-        
 
-    def __getFile(committag,filename):
+
+
+    def __getFile(self,committag,filename):
         object = os.path.join(self.objectdir,committag)
         hashmap = os.path.join(object,self.newhashmap)
         h = getHashNameFromHashmap(hashmap,filename)
         fp = open(os.path.join(object,h))
         content = fp.readlines()
         fp.close()
+        print(content)
         return content
 
 
@@ -188,6 +190,7 @@ def main():
     parser.add_option("-c", "--commit",help="commit the required changes", dest="commit",action= "store")
     parser.add_option("-s", "--status",help="all not commited files", dest="status",action= "store_true")
     parser.add_option("-l", "--log",help="complete list of commits", dest="log",action= "store_true")
+    parser.add_option("-d", "--diff",help="Given a file name shows diff from last commit", dest="diff",action= "store")
     parser.add_option("--change",help="overview of difference b/w two commits", dest="change",action= "store")
     (options, args) = parser.parse_args()
     if options.init:
@@ -211,6 +214,10 @@ def main():
         clist=options.change.split("..")
         obj=FileController()
         obj.change(clist[0],clist[1])
+    elif options.diff:
+        obj=FileController()
+        obj.diff(options.diff)
+
 
 if __name__ == "__main__":
     main()
