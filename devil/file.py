@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-import exceptions,os,shutil,hashlib,datetime,filecmp,base64
+import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys
 from optparse import OptionParser
 from utils import fileTracked,getUsername,getHashNameFromHashmap
 
@@ -23,6 +23,7 @@ class FileController(object):
         self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
         self.objectdir = os.path.abspath(os.path.join(self.directory,'Devil','object'))
         self.devil=os.path.abspath(os.path.join(self.directory,'Devil'))
+        sellf.newhashmap='newhashmap.txt'
 
     def start(self):
         """
@@ -85,7 +86,12 @@ class FileController(object):
                                 #print "in file ",path[0]
                                 if not (os.path.exists(os.path.join(self.objectdir,hashmap))):
                                         os.makedirs(os.path.join(self.objectdir,hashmap))
-                                shutil.copy2(path[0],os.path.join(self.objectdir,hashmap))
+                                        files=open(os.path.join(self.objectdir,hashmap,self.newhashmap),'w')
+                                        files.close()
+                                newhashmap=hashlib.sha224(base64.b64encode((path[0]).encode('ascii'))).hexdigest()
+                                files=open(os.path.join(self.objectdir,hashmap,'newhashmap.txt'),'a')
+                                files.write(path[0]+"   "+newhashmap+"\n")
+                                shutil.copy2(path[0],os.path.join(self.objectdir,hashmap,newhashmap))
                         elif(os.path.isdir(path[0])== True):
                                 print("in dir")
                                 shutil.copytree(path[0],os.path.join(self.objectdir,hashmap))
@@ -95,10 +101,7 @@ class FileController(object):
                 files.write(path[0] + " commited\n")
         files.close()
         files=open(self.statusfile,'a')
-        files.write("commit "+hashmap+"\n")
-        files.write("Author "+username+email+"\n")
-        files.write("Date "+dateandtime+"\n")
-        files.write("\n\n\n")
+        files.write("commit "+hashmap+" "+username+" "+email+" "+dateandtime+"\n")
 
     def rename(self,newname):
         if os.path.exists(newname):
@@ -120,7 +123,7 @@ class FileController(object):
                 print (line)
 
 
-    def diff(self,commit1,commit2):
+    def change(self,commit1,commit2):
         dir1=os.path.abspath(os.path.join(self.objectdir,commit1))
         dir2=os.path.abspath(os.path.join(self.objectdir,commit2))
         dc=filecmp.dircmp(dir1,dir2)
@@ -136,6 +139,20 @@ class FileController(object):
             print("Email: ",line[2])
             print("Date: ",line[3])
 
+ 
+    def diff(self,filename):
+        files=open(self.statusfile,'r')
+        a=files.readlines();
+        lastline=a[len(a)-1]
+        files.close()
+        files=open(os.path.abspath(os.path.join(self.directory,filename)),'r')
+        b=files.readlines();
+        files.close()
+        for_commit=lastline.split("commit ")
+        commit_tag=for_commit[1].split(" ")[0]
+        c=__getFile(commit_tag,os.path.abspath(os.path.join(self.directory,filename)))
+        print(difflib.ndiff(b,c))
+        
 
     def pull(self,url):
         pass
@@ -147,8 +164,10 @@ class FileController(object):
 
 
     # Helpers
-    def __objectname(hashtag):
+    def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
+        
+        
 
     def __getFile(committag,filename):
         object = os.path.join(self.objectdir,committag)
@@ -169,7 +188,7 @@ def main():
     parser.add_option("-c", "--commit",help="commit the required changes", dest="commit",action= "store")
     parser.add_option("-s", "--status",help="all not commited files", dest="status",action= "store_true")
     parser.add_option("-l", "--log",help="complete list of commits", dest="log",action= "store_true")
-    parser.add_option("-d", "--diff",help="overview of difference", dest="diff",action= "store")
+    parser.add_option("--change",help="overview of difference b/w two commits", dest="change",action= "store")
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
@@ -188,10 +207,10 @@ def main():
     elif options.log:
         obj=FileController()
         obj.log()
-    elif options.diff:
-        clist=options.diff.split("..")
+    elif options.change:
+        clist=options.change.split("..")
         obj=FileController()
-        obj.diff(clist[0],clist[1])
+        obj.change(clist[0],clist[1])
 
 if __name__ == "__main__":
     main()
