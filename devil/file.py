@@ -82,7 +82,7 @@ class FileController(object):
         for line in lines:
                 #print line
                 path=line.split(" ")
-                if(path[1]=="notcommited\n"):
+                if(path[1]=="notcommited\n" or path[1]=="commited\n"):
                         if(os.path.isfile(path[0])== True):
                                 #print "in file ",path[0]
                                 if not (os.path.exists(os.path.join(self.objectdir,hashmap))):
@@ -174,8 +174,10 @@ class FileController(object):
                 files=open(os.path.join(self.directory,filename),'w')
                 files.write(content)
                 files.close()
-                #shutil.copy(os.path.abspath('dummy.txt'),os.path.join(self.directory,filename))
 
+    def merge(self,directory):
+        filecmp.dircmp(self.directory,directory)
+        
     # Helpers
     def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
