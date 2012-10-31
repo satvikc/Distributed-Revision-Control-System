@@ -23,6 +23,7 @@ class FileController(object):
         self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
         self.objectdir = os.path.abspath(os.path.join(self.directory,'Devil','object'))
         self.devil=os.path.abspath(os.path.join(self.directory,'Devil'))
+        sellf.newhashmap='newhashmap.txt'
 
     def start(self):
         """
@@ -85,7 +86,7 @@ class FileController(object):
                                 #print "in file ",path[0]
                                 if not (os.path.exists(os.path.join(self.objectdir,hashmap))):
                                         os.makedirs(os.path.join(self.objectdir,hashmap))
-                                        files=open(os.path.join(self.objectdir,hashmap,'newhashmap.txt'),'w')
+                                        files=open(os.path.join(self.objectdir,hashmap,self.newhashmap),'w')
                                         files.close()
                                 newhashmap=hashlib.sha224(base64.b64encode((path[0]).encode('ascii'))).hexdigest()
                                 files=open(os.path.join(self.objectdir,hashmap,'newhashmap.txt'),'a')
@@ -137,8 +138,15 @@ class FileController(object):
         files=open(self.statusfile,'r')
         a=files.readlines();
         lastline=a[len(a)-1]
+        files.close()
+        files=open(os.path.abspath(os.path.join(self.directory,filename)),'r')
+        b=files.readlines();
+        files.close()
         for_commit=lastline.split("commit ")
         commit_tag=for_commit[1].split(" ")[0]
+        c=__getFile(commit_tag,os.path.abspath(os.path.join(self.directory,filename)))
+        print(difflib.ndiff(b,c))
+        
          
 
     def pull(self,url):
@@ -153,7 +161,6 @@ class FileController(object):
     # Helpers
     def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
-    def __returnfile(self,hastag,filename):
         
         
 
