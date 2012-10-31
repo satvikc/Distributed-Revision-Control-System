@@ -23,7 +23,7 @@ class FileController(object):
         self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
         self.objectdir = os.path.abspath(os.path.join(self.directory,'Devil','object'))
         self.devil=os.path.abspath(os.path.join(self.directory,'Devil'))
-        sellf.newhashmap='newhashmap.txt'
+        self.newhashmap='newhashmap.txt'
 
     def start(self):
         """
@@ -88,7 +88,10 @@ class FileController(object):
                                         os.makedirs(os.path.join(self.objectdir,hashmap))
                                         files=open(os.path.join(self.objectdir,hashmap,self.newhashmap),'w')
                                         files.close()
-                                newhashmap=hashlib.sha224(base64.b64encode((path[0]).encode('ascii'))).hexdigest()
+                                files=open(path[0],'r')
+                                content=files.readlines()
+                                files.close()
+                                newhashmap=hashlib.sha224(base64.b64encode((content).encode('ascii'))).hexdigest()
                                 files=open(os.path.join(self.objectdir,hashmap,'newhashmap.txt'),'a')
                                 files.write(path[0]+"   "+newhashmap+"\n")
                                 shutil.copy2(path[0],os.path.join(self.objectdir,hashmap,newhashmap))
@@ -161,7 +164,12 @@ class FileController(object):
         pass
 
     def revert(self,commit_hash):
-        pass
+        files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash,self.newhashmap)),'r')
+        a=files.readlines()
+        for line in a:
+                hashtag=line.split(" ")[1]
+                content=function(hashtag)
+                files=open(filename)
 
     # Helpers
     def __objectname(self,hashtag):
