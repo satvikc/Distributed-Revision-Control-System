@@ -161,8 +161,8 @@ class FileController(object):
             print(line)
 
 
-    def pull(self,url):
-        pass
+    def pull(self,directory):
+        self.merge(directory)
 
     def push(self,url):
         pass
@@ -180,7 +180,7 @@ class FileController(object):
 
     def merge(self,directory):
         commits = getCommits(directory)
-        print(commits)
+        #print(commits)
         mycommits = self.getAllCommits()
         commits_to_fetch = set(commits).difference(set(mycommits))
         fp = open(self.statusfile,'a')
@@ -194,8 +194,17 @@ class FileController(object):
             print(k)
             fp.write(k)
         fp.close()
-
-
+        parent_commit=[x for x in commits if x in set(commits2)][-1]
+        parent_file_list=self.__getFileList(parent_commit)
+        my_file_list=self.__getFileList(mycommits[-1])
+        other_file_list=self.__getFileList(commits[-1])
+        for elem in my_file_list:
+                for temp in other_file_list:
+                        if(elem==temp):
+                                content=mergefiles(self.__getFile(parent_commit,elem[0]),self.__getFile(mycommits[-1],elem[0]),self.__getFile(commits[-1],elem[0]))
+                                files=open(elem[0],'w')
+                                files.write(content)
+                                files.close()
 
     # Helpers
     def __objectname(self,hashtag):
@@ -221,6 +230,15 @@ class FileController(object):
         fp.close()
         return content
 
+    def __getFileList(commit_tag):
+        files=open(os.path.join(self.objectdir,commit_tag,self.newhashmap),'r')
+        lines=files.readlines()
+        tlist=[]
+        for line in lines:
+                line_split=line.split()
+                tlist.append((line_split[0],line_split[1]))
+        return tlist
+                        
     def getAllCommits(self):
         fp = open(self.statusfile)
         lines = fp.readlines()
