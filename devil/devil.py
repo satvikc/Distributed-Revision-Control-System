@@ -195,7 +195,7 @@ class DevilMainFrame(wx.Frame):
         loc=self.remote[server]
         """ Push """
         obj=FileController(self.directory)
-        obj.push(loc)
+        obj.push(myloc+loc)
         self.sb.SetStatusText("Pushed successfully")
         #print server 
 
