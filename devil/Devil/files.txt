@@ -1,6 +1,3 @@
-/home/rahulaaj/Distributed-Revision-Control-System/devil/sub/new/exceptions.py commited
-/home/rahulaaj/Distributed-Revision-Control-System/devil/sub/new/file.py commited
-/home/rahulaaj/Distributed-Revision-Control-System/devil/sub/__init__.py commited
-/home/rahulaaj/Distributed-Revision-Control-System/devil/sub/sum/server.py commited
-/home/rahulaaj/Distributed-Revision-Control-System/devil/file.py commited
-/home/rahulaaj/Distributed-Revision-Control-System/devil/server.py commited
+/home/satvik/acads/CS632/project/devil/test/Devil/files.txt commited
+/home/satvik/acads/CS632/project/devil/test/Devil/username.txt commited
+/home/satvik/acads/CS632/project/devil/test/mytestfile.txt commited
