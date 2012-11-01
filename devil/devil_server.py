@@ -17,6 +17,6 @@ class DevilServer(pb.Root):
 
 if __name__ == '__main__':
     serverfactory = pb.PBServerFactory(DevilServer())
-    reactor.listenTCP(8788, serverfactory)
+    reactor.listenTCP(6000, serverfactory)
     reactor.run()
 

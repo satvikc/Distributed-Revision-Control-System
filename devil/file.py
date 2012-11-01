@@ -34,20 +34,19 @@ class FileController(object):
 
         try:
                 os.makedirs(self.devil)
-        except OSError, e:
-                if e.errno != errno.EEXIST:
-                    raise
-        username = raw_input("Enter username:\n")
-        email = raw_input("Enter email \n")
-        uname=open(self.userfile,'w')
-        uname.write(username+'\n')
-        uname.write(email+'\n')
-        uname.close()
-        files=open(self.trackingfile,'w')
-        files.close()
-        files=open(self.statusfile,'w')
-        files.close()
-        os.makedirs(os.path.join(self.commitfiles))
+                username = raw_input("Enter username:\n")
+                email = raw_input("Enter email \n")
+                uname=open(self.userfile,'w')
+                uname.write(username+'\n')
+                uname.write(email+'\n')
+                uname.close()
+                files=open(self.trackingfile,'w')
+                files.close()
+                files=open(self.statusfile,'w')
+                files.close()
+                os.makedirs(os.path.join(self.commitfiles))
+        except :
+                print "Directory already initiated, cannot initiate again!"
 
     def add(self,filename):
         """
@@ -84,8 +83,8 @@ class FileController(object):
         #os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
         if not (os.path.exists(os.path.join(self.commitfiles))):
             os.makedirs(os.path.join(self.commitfiles))
-            files=open(os.path.join(self.objectdir,hashmap),'w')
-            files.close()
+        files=open(os.path.join(self.objectdir,hashmap),'w')
+        files.close()
         for line in lines:
                 #print line
                 path=line.split(" ")
@@ -97,7 +96,7 @@ class FileController(object):
                                 files.close()
                                 newhashmap=hashlib.sha224(base64.b64encode((str(content)).encode('ascii'))).hexdigest()
                                 files=open(os.path.join(self.objectdir,hashmap),'a')
-                                files.write(path[0]+"   "+newhashmap+"\n")
+                                files.write(os.path.relpath(path[0],self.directory)+"   "+newhashmap+"\n")
                                 files.close()
                                 shutil.copy2(path[0],os.path.join(self.commitfiles,newhashmap))
                         elif(os.path.isdir(path[0])== True):
@@ -106,7 +105,7 @@ class FileController(object):
         files=open(self.trackingfile,'w')
         for line in lines:
                 path=line.split(" ")
-                files.write(path[0] + " commited\n")
+                files.write(os.path.relpath(path[0],self.directory) + " commited\n")
         files.close()
         files=open(self.statusfile,'a')
         files.write("commit "+hashmap+" "+username+" "+email+" "+dateandtime+"\n")
