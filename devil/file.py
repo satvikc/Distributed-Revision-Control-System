@@ -205,7 +205,7 @@ class FileController(object):
         fp.close()
         """
         parent_commit=[x for x in commits if x in set(mycommits)][-1]
-        #print (parent_commit.split()[1])
+        #print (parent_commit.split()[1]) 
         parent_file_list=self.getFileList(parent_commit.split()[1])
         my_file_list=self.getFileList(mycommits[-1].split()[1])
         other_file_list=self.getFileList(commits[-1].split()[1])
