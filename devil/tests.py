@@ -16,7 +16,7 @@ class LocalTests(unittest.TestCase):
         self.f.start()
 
     def tearDown(self):
-        shutil.rmtree(self.tempdir)
+        #shutil.rmtree(self.tempdir)
         pass
 
     def test_start(self):
