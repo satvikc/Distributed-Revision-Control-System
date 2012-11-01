@@ -159,7 +159,7 @@ class FileController(object):
         files.close()
         for_commit=lastline.split("commit ")
         commit_tag=for_commit[1].split(" ")[0]
-        c=self.__getFile(commit_tag,os.path.abspath(os.path.join(self.directory,filename)))
+        c=self.getFile(commit_tag,os.path.abspath(os.path.join(self.directory,filename)))
         for line in difflib.ndiff(c,b):
             print(line)
 
@@ -175,7 +175,7 @@ class FileController(object):
         a=files.readlines()
         for line in a:
                 filename=line.split(" ")[0]
-                content=self.__getFiler(commit_hash,filename)
+                content=self.getFiler(commit_hash,filename)
                 files=open(os.path.join(self.directory,filename),'w')
                 files.write(content)
                 files.close()
@@ -199,14 +199,14 @@ class FileController(object):
         fp.close()
         parent_commit=[x for x in commits if x in set(mycommits)][-1]
         #print (parent_commit.split()[1])
-        parent_file_list=self.__getFileList(parent_commit.split()[1])
-        my_file_list=self.__getFileList(mycommits[-1].split()[1])
-        other_file_list=self.__getFileList(commits[-1].split()[1])
+        parent_file_list=self.getFileList(parent_commit.split()[1])
+        my_file_list=self.getFileList(mycommits[-1].split()[1])
+        other_file_list=self.getFileList(commits[-1].split()[1])
         flag=0
         for elem in my_file_list:
                 for temp in other_file_list:
                         if(elem==temp):
-                                dicts=merge3.devilMerge(self.__getFile(parent_commit.split()[1],elem[0]),self.__getFile(mycommits[-1].split()[1],elem[0]),self.__getFile(commits[-1].split()[1],elem[0]))
+                                dicts=merge3.devilMerge(self.getFile(parent_commit.split()[1],elem[0]),self.getFile(mycommits[-1].split()[1],elem[0]),self.getFile(commits[-1].split()[1],elem[0]))
                                 files=open(elem[0],'w')
                                 files.write(dicts['md_content'])
                                 files.close()
@@ -223,7 +223,7 @@ class FileController(object):
 
 
 
-    def __getFile(self,committag,filename):
+    def getFile(self,committag,filename):
         object = os.path.join(self.objectdir,committag)
         hashmap = os.path.join(object,self.newhashmap)
         h = getHashNameFromHashmap(hashmap,filename)
@@ -232,7 +232,7 @@ class FileController(object):
         fp.close()
         return content
 
-    def __getFiler(self,committag,filename):
+    def getFiler(self,committag,filename):
         object = os.path.join(self.objectdir,committag)
         hashmap = os.path.join(object,self.newhashmap)
         h = getHashNameFromHashmap(hashmap,filename)
@@ -241,7 +241,7 @@ class FileController(object):
         fp.close()
         return content
 
-    def __getFileList(self,commit_tag):
+    def getFileList(self,commit_tag):
         files=open(os.path.join(self.objectdir,commit_tag,self.newhashmap),'r')
         lines=files.readlines()
         tlist=[]
