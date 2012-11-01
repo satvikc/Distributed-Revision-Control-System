@@ -222,7 +222,6 @@ class FileController(object):
         return os.path.join(self.objectdir,hashtag)
 
 
-
     def getFile(self,committag,filename):
         hashmap = os.path.join(self.objectdir,committag)
         h = getHashNameFromHashmap(hashmap,filename)
@@ -230,6 +229,21 @@ class FileController(object):
         content = fp.readlines()
         fp.close()
         return content
+
+    def getFileName(self,committag):
+        fp = open(os.path.join(self.objectdir,committag))
+        lines = fp.readlines()
+        return [l.split()[0] for l in lines]
+
+    def getFileLoc(self,committag,filename):
+        fp = open(os.path.join(self.objectdir,committag))
+        lines = fp.readlines()
+        splits = [i.split() for i in lines]
+        for (n,h) in splits:
+            if n == filename:
+                return h
+        return None
+
 
     def getFiler(self,committag,filename):
         hashmap = os.path.join(self.objectdir,committag)
@@ -254,25 +268,45 @@ class FileController(object):
         fp.close()
         return lines
 
+    #def compress(self,commit):
+        #archivename = tempfile.mkstemp(suffix='.zip')
+        #zipdir(os.path.join(self.objectdir,commit),archivename)
+        #return archivename
+
     def compressAndSend(self,commit): #warning doesnot handle empty directory
-        tempdir = tempfile.gettempdir()
-        archivename = os.path.join(tempdir,commit+'.zip')
-        zipdir(os.path.join(self.objectdir,commit),archivename)
+        archivename = self.compressAll(commit)
         fp = open(archivename,'rb')
         contents = fp.read()
         fp.close()
         return contents
 
-    def uncompressAndWrite(self,commit,content):
-        tempdir = tempfile.gettempdir()
+    def compressAll(self,commits):
+        tempdir = tempfile.mkdtemp()
+        temp = tempfile.gettempdir()
+        commitdir = os.path.join(tempdir,os.path.basename(self.commitdir))
+        try:
+            os.mkdir(commitdir)
+        except:
+            pass
         archivename = os.path.join(tempdir,commit+'.zip')
-        if not os.path.isfile(archivename):
-            fp = open(archivename,'wb')
-            fp.write(content)
-            fp.close()
-        extractto = os.path.join(self.objectdir,commit)
-        os.makedirs(extractto)
-        unzipdir(extractto,archivename)
+        for i in commits:
+            filenames = self.getFileName(i)
+            shutil.copy2(os.path.join(self.objectdir,i),tempdir)
+            for fn in filenames:
+                h = self.getFileLoc(i,fn)
+                floc = os.path.join(self.commitfiles,h)
+                shutil.copy2(floc, commitdir)
+
+        archivename = tempfile.mkstemp(suffix='.zip')
+        zipdir(tempdir,archivename)
+
+
+    def uncompressAndWrite(self,archivename,content):
+        archivename = tempfile.mkstemp(suffix='.zip')
+        fp = open(archivename,'wb')
+        fp.write(content)
+        fp.close()
+        unzipdir(self.objectdir,archivename)
 
 
 
@@ -288,7 +322,7 @@ def getCommits(d):
 
 def getCommitsContent(d,c):
     f = FileController(d)
-    return f.compressAndSend(c)
+    return f.compressAndSendAll([c])
 
 def zipdir(basedir, archivename):
     assert os.path.isdir(basedir)
