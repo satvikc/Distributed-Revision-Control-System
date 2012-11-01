@@ -7,6 +7,7 @@ import os
 from file import FileController
 from file import merge3
 from file import getLastCommit
+import ConfigParser
 
 # begin wxGlade: extracode
 # end wxGlade
@@ -14,7 +15,8 @@ from file import getLastCommit
 
 class DevilMainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
-        self.directory = None
+        self.directory = os.getcwd()
+        self.remote = {}
         # begin wxGlade: DevilMainFrame.__init__
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
@@ -48,6 +50,8 @@ class DevilMainFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.OnPush, self.button_9)
         self.Bind(wx.EVT_BUTTON, self.OnStatus, self.button_11)
         self.Bind(wx.EVT_BUTTON, self.OnLog, self.button_12)
+        self.UpdateServerList()
+        self.UpdateRevertList()
         # end wxGlade
 
     def __set_properties(self):
@@ -162,12 +166,17 @@ class DevilMainFrame(wx.Frame):
         #print server 
 
     def OnStatus(self, event):  # wxGlade: DevilMainFrame.<event_handler>
-        print "Event handler `OnStatus' not implemented"
-        event.Skip()
+
+        """ Status code here """ 
+        status = "get status from file"
+
+        self.text_ctrl_5.SetValue(status)
 
     def OnLog(self, event):  # wxGlade: DevilMainFrame.<event_handler>
-        print "Event handler `OnLog' not implemented"
-        event.Skip()
+
+        status = "get log  from file"
+
+        self.text_ctrl_5.SetValue(status)
 
     def UpdateRevertList(self):
         """ Get all commits in the commit list """
@@ -176,13 +185,24 @@ class DevilMainFrame(wx.Frame):
         self.combo_box_4.AppendItems(commits)
         wx.Yield()
 
-    def OnPullList(self, event):  # wxGlade: DevilMainFrame.<event_handler>
-        print "Event handler `OnPullList' not implemented"
-        event.Skip()
+    def UpdateServerList(self):  
+        """ get list of servers """
+        cp = ConfigParser.RawConfigParser()
+        fp = FileController(self.directory)
+        cp.read(fp.remotefile)
+        #cp.read('remotes.txt')
+        nodes = cp.items("Remotes")
+        servers = []
+        for (n,l) in nodes:
+            self.remote[n] = l 
+            servers = servers + [n]
+        print nodes
+        self.combo_box_5.Clear()
+        self.combo_box_5.AppendItems(servers)
+        self.combo_box_6.Clear()
+        self.combo_box_6.AppendItems(servers)
+        wx.Yield()
 
-    def OnPushList(self, event):  # wxGlade: DevilMainFrame.<event_handler>
-        print "Event handler `OnPushList' not implemented"
-        event.Skip()
 
 # end of class DevilMainFrame
 if __name__ == "__main__":
