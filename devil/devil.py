@@ -151,30 +151,45 @@ class DevilMainFrame(wx.Frame):
 
     def OnPull(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         server = self.combo_box_5.GetValue()
-        
+        loc=self.remote[server]
         """ Pull """
         obj=FileController(self.directory)
-        obj.pull()
+        obj.pull(loc)
         #print server 
 
     def OnPush(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         server = self.combo_box_6.GetValue()
-
+        loc=self.remote[server]
         """ Push """
         obj=FileController(self.directory)
-        obj.push()
+        obj.push(loc)
         #print server 
 
     def OnStatus(self, event):  # wxGlade: DevilMainFrame.<event_handler>
 
         """ Status code here """ 
-        status = "get status from file"
+        obj=FileController(self.directory)
+        files=open(obj.trackingfile)
+        lines=files.readlines();
+        splitted = [(l[0],l[1],l[2]) for l in (y.split() for y in lines)]
+        status=''
+        for (f,st,md) in splitted:
+            if st != 'commited':
+                status=status+"added: " + f +"\n"
+            elif not (md == str(os.path.getmtime(f))):
+                status=status+"modified: " + f +"\n"
+        #status = "get status from file"
 
         self.text_ctrl_5.SetValue(status)
 
     def OnLog(self, event):  # wxGlade: DevilMainFrame.<event_handler>
-
-        status = "get log  from file"
+        obj=FileController(self.directory)
+        status = ''
+        files=open(obj.statusfile)
+        lines=files.readlines();
+        for line in lines:
+            line = line.split()
+            status=status+"Commit: " + line[1] + "\n"  + "Author: " + line[2] + "\n" + "Email: " + line[3] + "\n" + "Date: " + line[4] + "\n\n"
 
         self.text_ctrl_5.SetValue(status)
 
