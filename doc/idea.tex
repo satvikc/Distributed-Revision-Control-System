@@ -92,6 +92,18 @@ keeping track of various versions of the code. It consists of
   code version.
 \item Merging of the patches to the codebase.
 \end{itemize}
+\subsubsection{3 Way  Merge Strategy}
+There are several reasons which require us to use an automated merge tool for a distributed revision control system:
+\begin{itemize}
+\item It is very much possible for two different developers to edit the same file in their respective code bases. Then it is very difficult to manually merge the two files at the time of combining their versions of code.
+\item We want the non-conflicting changes in the same file to get merged automatically without any user intervention.
+\end{itemize}
+
+There are many merging startegies like 2-Way merge, 3-Way merge, patch commutation of Darcs,  two-way merge with history of Codeville etc. \cite{WIKIMERGE}.
+We have used 3-Way merge in our project, because it requires a parent file to merge two files and the revision control systems mostly gurantees existense of such a file.
+
+Consider, two files \emph{A} and \emph{B} with \emph{C} as their parent file (the file from which both files have diverged). Our merge algorithm analyses the difference between files \emph{A} and \emph{B} considering itno account the differences of it from their parent \emph{C} to produce the automatically-merged file \emph{D}. 
+
 \subsection{User Interface/Controller}
 This will provide the actual interface which user will be able to use and this
 will coordinate the working of the other two components.
@@ -120,6 +132,9 @@ Judah Jacobson, \emph{A formalization of Darcs patch theory using inverse
 GNU Bazaar, \url{http://wiki.bazaar.canonical.com/}
 \bibitem{parable}
 Git Parable, \url{http://tom.preston-werner.com/2009/05/19/the-git-parable.html}
+\bibitem{WIKIMERGE}
+Merge Strategies.
+\url{http://en.wikipedia.org/wiki/Merge_%28revision_control%29}
 \end{thebibliography}
 
 \end{document}
