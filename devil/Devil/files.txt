@@ -1,3 +1,0 @@
-/home/satvik/acads/CS632/project/devil/test/Devil/files.txt commited
-/home/satvik/acads/CS632/project/devil/test/Devil/username.txt commited
-/home/satvik/acads/CS632/project/devil/test/mytestfile.txt commited
