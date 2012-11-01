@@ -137,6 +137,7 @@ class FileController(object):
                             raise
 
 
+
     def clone(self,target):
         self.directory = os.path.basename(target)
         self.start()
@@ -193,7 +194,7 @@ class FileController(object):
         pass
 
     def revert(self,commit_hash):
-        files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash),'r'))
+        files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash)),'r')
         a=files.readlines()
         for line in a:
                 filename=line.split(" ")[0]
@@ -243,12 +244,9 @@ class FileController(object):
     def getFile(self,committag,filename):
         hashmap = os.path.join(self.objectdir,committag)
         h = getHashNameFromHashmap(hashmap,filename)
-        print h,"<-------\n"
         try:
-            print "What is the path ", os.path.join(self.commitfiles,h)
             fp = open(os.path.join(self.commitfiles,h),'r')
             content = fp.readlines()
-            print "Content--------->",content
             fp.close()
             return content
         except:
@@ -272,10 +270,13 @@ class FileController(object):
     def getFiler(self,committag,filename):
         hashmap = os.path.join(self.objectdir,committag)
         h = getHashNameFromHashmap(hashmap,filename)
-        fp = open(os.path.join(self.objectdir,h))
-        content = fp.read()
-        fp.close()
-        return content
+        try:
+            fp = open(os.path.join(self.commitfiles,h),'r')
+            content = fp.read()
+            fp.close()
+            return content
+        except:
+            return ''
 
     def getFileList(self,commit_tag):
         try:
