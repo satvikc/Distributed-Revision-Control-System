@@ -23,8 +23,60 @@
 \usepackage{fullpage}
 \usepackage{wrapfig}
 \newcommand{\comment}[1]{}
+\usepackage{fancyhdr}
 
-\title{CS685: Group 14 \\
+
+\usetikzlibrary{backgrounds}
+\makeatletter
+
+\tikzset{%
+  fancy quotes/.style={
+    text width=\fq@width pt,
+    align=justify,
+    inner sep=1em,
+    anchor=north west,
+    minimum width=\textwidth,
+  },
+  fancy quotes width/.initial={.8\textwidth},
+  fancy quotes marks/.style={
+    scale=8,
+    text=white,
+    inner sep=0pt,
+  },
+  fancy quotes opening/.style={
+    fancy quotes marks,
+  },
+  fancy quotes closing/.style={
+    fancy quotes marks,
+  },
+  fancy quotes background/.style={
+    show background rectangle,
+    inner frame xsep=0pt,
+    background rectangle/.style={
+      fill=gray!20,
+      rounded corners,
+    },
+  }
+}
+
+
+\newenvironment{fancyquotes}[1][]{%
+\noindent
+\tikzpicture[fancy quotes background]
+\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) {``};
+\tikz@scan@one@point\pgfutil@firstofone(fq@ul.east)
+\pgfmathsetmacro{\fq@width}{\textwidth - 2*\pgf@x}
+\node[fancy quotes,#1] (fq@txt) at (fq@ul.north west) \bgroup}
+{\egroup;
+\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
+\endtikzpicture}
+
+\makeatother
+
+\fancyhead{} % clear all fields
+
+
+\title{CS632: Group 14 \\
 Distributed Code Revision Control System}
 \author{
 \begin{tabular}{ccc}
@@ -39,6 +91,14 @@ Dept. of CSE & Dept. of CSE \\
 
 \begin{document}
 \maketitle
+\thispagestyle{fancy}
+
+\begin{fancyquotes}
+  Version control is one of those weird, geeky things that never really gained
+  much ground in non-geek fields, despite the fact that it’s blindingly
+  useful.
+\end{fancyquotes}
+
 \begin{abstract}
 A distributed revision control system (DRCS), distributed version control or
 decentralized version control system (DVCS) keeps track of software revisions
@@ -56,29 +116,47 @@ system with basic features like commit, push commits, pull commits, view history
 merging of code files, reverting changes etc.
 \end{abstract}
 \section{Introduction}
-Version control is just a way to track our files over time and share them
-with other collaborators. This allows us to go back to older versions when
+Version control is just a way to track our files over time and share them with
+other collaborators. This allows us to go back to older versions when
 something goes wrong, see what changed when and why, collaborate on a single
 piece of work with a bunch of people.
 
-\begin{wrapfigure}[14]{r}{9cm}
-\centering
-\begin{tikzpicture}[ scale=0.6,transform shape]
-\tikzstyle{every node}=[circle,fill=gray!40]
-\draw [fill=gray!10] (-3,-3) rectangle (8,6);
-\draw (2.5,-3) node [above ,fill=gray!10] {Peer system};
-\node (a) at (0,0) {Networking system} ;
-\node (b) at (5,0) {Code Revision system};
-\node (c) at (2,4) {Controller};
-\node (f) at (10,0) {Code files};
-\node (u) at (-5,0) {Other Peer};
-\draw [<->] (c) -- (a);
-\draw [<->] (c) -- (b);
-\draw [<->] (u) -- (a);
-\draw [<->] (b) -- (f);
-\end{tikzpicture}
-\caption{Highlevel design}
-\end{wrapfigure}
+Version control is just a way of backing up your files, before making changes
+to it. Most people would have cooked up their own version control system,
+without realizing, there are tools built by others, which make this task much
+more organized and systematic. People unfamiliar with version control systems
+usually save their files, some time or the other as project.c,
+latproject.c, oldproject.c and so on. It is, in some ways, similar to playing a
+video game. We generally play games in stages, saving the game, each time we
+finish a stage or complete a task. We continue playing, but we could, if
+necessary, choose to go back to one of the saved states and start over. In
+this manner we could change the state of the game \cite{PYVCS}.
+
+The main motivations for using version control systems include:
+
+\begin{enumerate}
+\item You won't lose your code by accident. Having a version control system,
+  preferably with a remote service, will mean you're going to have another
+  place where your code is stored. If several developers are working on the
+  code simultaneously, then each one of them will have a copy of the entire
+  code (or, in some cases, even the entire history).
+
+\item It allows you to keep historical versions of the code, for easy
+  reverting, comparison and investigation.
+
+\item Let's say you introduced a bug. With a version control system you can
+  easily revert to a previous version of the code where the bug was not
+  present to verify that it did not exist there. Then you can diff the
+  results, or even bisect the history to find the exact check-in that
+  introduced this bug.
+
+\item It allows one to maintain several simultaneous lines of code (normally
+  called "branches") and to easily compare between them and merge them.
+
+\end{enumerate}
+
+
+
 \section{Implementation}
 We take a peer to peer approach for maintaining the code. Every peer will have
 its own copy of the codebase and can request other peers to merge their code
@@ -116,25 +194,47 @@ are unchanged between commits will have the same content and thus the same
 name and will be saved as a single file rather than two different files as was
 the case previously. To be more agressive we can further compress the text
 files . This is very similar to the git's approach of compressing the
-snapshots into blobs \cite{parable}.
+snapshots into blobs \cite{parable}. Now we will look at the high level
+partition of our system in the following sections.
 
 \subsection{Networking}
+
+\begin{wrapfigure}[11]{r}{9cm}
+\centering
+\begin{tikzpicture}[ scale=0.6,transform shape]
+\tikzstyle{every node}=[circle,fill=gray!40]
+\draw [fill=gray!10] (-3,-3) rectangle (8,6);
+\draw (2.5,-3) node [above ,fill=gray!10] {Peer system};
+\node (a) at (0,0) {Networking system} ;
+\node (b) at (5,0) {Code Revision system};
+\node (c) at (2,4) {Controller};
+\node (f) at (10,0) {Code files};
+\node (u) at (-5,0) {Other Peer};
+\draw [<->] (c) -- (a);
+\draw [<->] (c) -- (b);
+\draw [<->] (u) -- (a);
+\draw [<->] (b) -- (f);
+\end{tikzpicture}
+\caption{Highlevel design}
+\end{wrapfigure}
+
 Networking subsystem implements the underlying communication between the
-peers. It consists of
+peers using the RPC like framwork. It usually serves therse purposes
 \begin{itemize}
 \item Defining the underlying protocol for communication.
 \item Connecting to a peer and transferring the patches reported by the
   revision system.
+\item Interacting with the Code revision system.
 \end{itemize}
 We have used the python twisted library to implement our networking
-system. Twisted's spread module provides framework to quickly and easily
-implement peer to peer systems. Spread is a kind of RPC (Remote procedural
-Calls) which allows us to make remote function calls. The parameters of the
-functions as well as the returned element must have serializable instances. It
-also allows to pass objects (which inherit from Copyable class) as parameters
-to function calls.
+system. Twisted's perspective broker (PB) \cite{PB} module provides framework to quickly
+and easily implement peer to peer systems. Spread is a kind of RPC (Remote
+procedural Calls) which allows us to make remote function calls. The
+parameters of the functions as well as the returned element must have
+serializable instances. It also allows to pass objects (which inherit from
+Copyable class) as parameters to function calls.
 
-The programming style for implementing spread application is asynchronous. It
+The programming style for implementing PB application is asynchronous. It
 adds callback to all the remote calls. The call methods are invocated when the
 remote procedure returns the result. Thus it ensures that the execution at the
 client side continues while the execution of the remote procedure is taking
@@ -142,11 +242,22 @@ place. We can also add the error callback which is invocated when an error is
 raised at the server side. Thus the remote calls add some bit of transparency
 avoiding any overhead due to network latency by being asynchronous.
 
+\pagebreak
 
 \subsection{Code Revision System}
-\begin{wrapfigure}[8]{r}{9cm}
+
+Code Revision system performs all the major tasks of actually interacting with
+the code files while keeping track of various versions of the code. It consists of
+\begin{itemize}
+\item Keeping tracks of all the files added to version control.
+\item Creating commit snapshots.
+\item At the time of pull/push it determines what commits need to be sent to the remote.
+\item Performing merging of code files based on the defined merge strategy.
+\end{itemize}
+\subsubsection{3 Way  Merge Strategy}
+\begin{wrapfigure}[6]{r}{6cm}
 \centering
-\begin{tikzpicture}[ scale=0.6,transform shape]
+\begin{tikzpicture}[ scale=0.5,transform shape]
 \tikzstyle{every node}=[circle,thick,fill=gray!40,inner sep=8]
 \node (a) at (0,0) {C} ;
 \node (b) at (5,-3) {B};
@@ -157,27 +268,29 @@ avoiding any overhead due to network latency by being asynchronous.
 \draw [->] (b) -- (d);
 \draw [->] (c) -- (d);
 \end{tikzpicture}
-\caption{3-way Merge Strategy}
+\caption{3-way Merging}
 \end{wrapfigure}
-Code Revision system performs all the major tasks of creating blobs, patches and
-keeping track of various versions of the code. It consists of
+There are several reasons which require us to use an automated merge tool for
+a distributed revision control system:
 \begin{itemize}
-\item Creating blobs and patches based on changes in the files.
-\item Determining what patches needs to be send to the peer depending on the
-  code version.
-\item Merging of the patches to the codebase.
-\end{itemize}
-\subsubsection{3 Way  Merge Strategy}
-There are several reasons which require us to use an automated merge tool for a distributed revision control system:
-\begin{itemize}
-\item It is very much possible for two different developers to edit the same file in their respective code bases. Then it is very difficult to manually merge the two files at the time of combining their versions of code.
-\item We want the non-conflicting changes in the same file to get merged automatically without any user intervention.
+\item It is very much possible for two different developers to edit the same
+  file in their respective code bases. Then it is very difficult to manually
+  merge the two files at the time of combining their versions of code.
+\item We want the non-conflicting changes in the same file to get merged
+  automatically without any user intervention.
 \end{itemize}
 
-There are many merging startegies like 2-Way merge, 3-Way merge, patch commutation of Darcs,  two-way merge with history of Codeville etc. \cite{WIKIMERGE}.
-We have used 3-Way merge in our project, because it requires a parent file to merge two files and the revision control systems mostly gurantees existense of such a file.
+There are many merging startegies like 2-Way merge, 3-Way merge, patch
+commutation of Darcs, 2-Way merge with history of Codeville
+etc. \cite{WIKIMERGE}. We have used 3-Way merge in our project, because it
+requires a parent file to merge two files and the revision control systems
+mostly gurantees existense of such a file.
 
-Consider, two files \emph{A} and \emph{B} with \emph{C} as their parent file (the file from which both files have diverged). Our merge algorithm analyses the difference between files \emph{A} and \emph{B} considering itno account the differences of it from their parent \emph{C} to produce the automatically-merged file \emph{D}.
+Consider, two files \emph{A} and \emph{B} with \emph{C} as their parent file
+(the file from which both files have diverged). Our merge algorithm analyses
+the difference between files \emph{A} and \emph{B} considering into account
+the differences of it from their parent \emph{C} to produce the
+automatically-merged file \emph{D}.
 
 \subsection{User Interface/Controller}
 This will provide the actual interface which user will be able to use and this
@@ -226,7 +339,9 @@ $ ./file.py -d sub/tests.py
 
 - import os
 
+
   import string
+
 
 + import time
 
@@ -259,33 +374,55 @@ Date: 2012-11-01
 \begin{lstlisting}
 $ ./file.py --pull 127.24.1.166:5000/sub
 Merged sub/merge3.py
+
 Merged  sub/tests.py
 \end{lstlisting}
 \item \emph{Push} It is the converse of the pull command discussed above, it pushes the last commit of the current user, which is in turn pulled by other users.It basically updates the remote references(files) using the local copy of the references and sends the required files. 
 \begin{lstlisting}
 $ ./file.py --pull 127.24.1.166:5000/sub
+
 \end{lstlisting}
 \end{itemize}
+\section{Conclusion and Future Work}
 \begin{thebibliography}{99}
 \bibitem{wiki}
-wikipedia \url{http://en.wikipedia.org/wiki/Distributed_revision_control}
+Distributed Revision Control
+
+\url{http://en.wikipedia.org/wiki/Distributed_revision_control}
 \bibitem{git}
-git version control system \url{http://git-scm.com}
+Git version control system
+
+\url{http://git-scm.com}
 \bibitem{mercurial}
 Matt Mackall, \emph{Towards a Better SCM: Revlog and Mercurial} .
 \bibitem{darcs}
-Judah Jacobson, \emph{A formalization of Darcs patch theory using inverse
+Judah Jacobson,
+
+\emph{A formalization of Darcs patch theory using inverse
   semigroups}.
 \bibitem{bazaar}
-GNU Bazaar, \url{http://wiki.bazaar.canonical.com/}
+GNU Bazaar,
+
+\url{http://wiki.bazaar.canonical.com/}
 \bibitem{parable}
 Git Parable,
+
 \url{http://tom.preston-werner.com/2009/05/19/the-git-parable.html}
+\bibitem{PYVCS}
+Using Version Control
+
+\url{http://www.fossee.in/sdes-iitb/using_version_control.html}
+\bibitem{PB}
+Introduction to Perspective Broker
+
+\url{http://twistedmatrix.com/documents/current/core/howto/pb-intro.html}
 \bibitem{KISS}
 Keep it Simple, Stupid
+
 \url{http://people.apache.org/~fhanik/kiss.html}
 \bibitem{WIKIMERGE}
 Merge Strategies.
+
 \url{http://en.wikipedia.org/wiki/Merge_%28revision_control%29}
 \end{thebibliography}
 \end{document}
