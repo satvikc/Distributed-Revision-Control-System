@@ -2,6 +2,17 @@
 
 \usepackage{tikz}
 \usetikzlibrary{backgrounds}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\definecolor{lightgrey}{gray}{0.8}
+\lstset{
+    frame=lrbt
+  , backgroundcolor=\color{lightgrey}
+  , frame=shadowbox
+  , rulesepcolor=\color{gray}
+}
+
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -41,30 +52,14 @@ changes, each peer has a working copy of the codebase. DVCS usually perform
 syncronizations by exchanging patches between peers.
 
 In this project we will be implementing a distributed version control
-system with basic features like commit, push patch, pull patch, view history,
+system with basic features like commit, push commits, pull commits, view history,
 merging of code files, reverting changes etc.
 \end{abstract}
 \section{Introduction}
-Talk about use of revision control systems.
-asd
-sayas
-d
-sa
-ds
-ad
-as
-d
-as
-d
-as
-
-add
-
-asda
-
-addsd
-a
-add
+Version control is just a way to track our files over time and share them
+with other collaborators. This allows us to go back to older versions when
+something goes wrong, see what changed when and why, collaborate on a single
+piece of work with a bunch of people.
 
 \begin{wrapfigure}[14]{r}{9cm}
 \centering
@@ -147,14 +142,15 @@ place. We can also add the error callback which is invocated when an error is
 raised at the server side. Thus the remote calls add some bit of transparency
 avoiding any overhead due to network latency by being asynchronous.
 
+
 \subsection{Code Revision System}
 \begin{wrapfigure}[8]{r}{9cm}
 \centering
 \begin{tikzpicture}[ scale=0.6,transform shape]
 \tikzstyle{every node}=[circle,thick,fill=gray!40,inner sep=8]
-\node (a) at (0,0) {A} ;
+\node (a) at (0,0) {C} ;
 \node (b) at (5,-3) {B};
-\node (c) at (5,3) {C};
+\node (c) at (5,3) {A};
 \node (d) at (10,0) {D};
 \draw [->] (a) -- (b);
 \draw [->] (a) -- (c);
@@ -181,33 +177,94 @@ There are several reasons which require us to use an automated merge tool for a 
 There are many merging startegies like 2-Way merge, 3-Way merge, patch commutation of Darcs,  two-way merge with history of Codeville etc. \cite{WIKIMERGE}.
 We have used 3-Way merge in our project, because it requires a parent file to merge two files and the revision control systems mostly gurantees existense of such a file.
 
-Consider, two files \emph{A} and \emph{B} with \emph{C} as their parent file (the file from which both files have diverged). Our merge algorithm analyses the difference between files \emph{A} and \emph{B} considering itno account the differences of it from their parent \emph{C} to produce the automatically-merged file \emph{D}. 
+Consider, two files \emph{A} and \emph{B} with \emph{C} as their parent file (the file from which both files have diverged). Our merge algorithm analyses the difference between files \emph{A} and \emph{B} considering itno account the differences of it from their parent \emph{C} to produce the automatically-merged file \emph{D}.
 
 \subsection{User Interface/Controller}
 This will provide the actual interface which user will be able to use and this
 will coordinate the working of the other two components.
 It consists of
 \begin{itemize}
-\item Defining a command line interface for linux machines and if possible a
-  gui interface may be considered.
-\item Defining the ususal commands like commit, push changes, pull changes
-  etc.
-\item This will act like a bridge between the networking subsystem and code
-  revision system and will combine the features of both to provide an end to
-  end distributed version control system.
+\item It contains command line interface to perform all the actions. We
+  haven't tested it on a windows machine but the code should be portable.
+\item An intuitive GUI interface is important to have a better user
+  experience, but due to lack of time we could not implement it.
+\item We have defined the usual commands like initiate repository, add files,
+  pull commits, see log, see the status, revert changes, clone repository,
+  push commits etc.
+\item This acts like a bridge between the networking subsystem and code
+  revision system. It uses both the interfaces to provide an end to end code
+  revision system.
 \end{itemize}
 
 \subsection{Functionalities}
 We are providing the user with the following functionalities:
 \begin{itemize}
 \item \emph{Init} This command initializes all the directories and files which are required to do the revision control, and asks the user for its username and password which behave as the identity of the user for interacting with other users.
-\item \emph{Add} The add command adds a file or a directory to the set of files which on commiting gets added to the repository of files which can be shared over the network. Command to run is $./file.py -a <file$ $or$ $directory>$
-\item \emph{Commit} This command adds the set of all tracking files added into a repository which can be accessed using the commit tag. Command to run is $./file.py -c <message$ $string>$
-\item \emph{Diff} The diff commands on given the filename prints out the difference of the file from the last commit, with $+$ signifying the line has been added, $-$ suggesting that the line has been removed and no first charachter means the line has not been changed in the file. Command to run is $./file.py -d <file>$
-\item \emph{Status} It prints out the current status of all the files which are modified and are still not being commited, that is will list out all the files which needs to be commited in order to get stored in the commited file database. Command to run is $./file.py -s$
-\item \emph{Pull} It will get the last commit from a different user over the network and for each file in the commit it will find out the file in the current directory of the user and the parent file (the file from which both files have diverged) and merge them using our 3-way merge algorithm as defined earlier in the Code Revision System section, and after successfully merging it creates a new commit with new merged files in the current directory. Command to run is $./file.py -pull <file>$
-\item \emph{Push} It is the converse of the pull command discussed above, it pushes the last commit of the current user, which is in turn pulled by other users. Command to run is $./file.py -push <file>$
+\begin{lstlisting}
+$ ./file.py -i
+Enter username:
+rahulaaj
+Enter email 
+rahulajmera91@gmail.com
+\end{lstlisting}
+\item \emph{Add} The add command adds a file or a directory to the set of files which on commiting gets added to the repository of files which can be shared over the network.It basically prepares the content prepared for the next commit by adding the modified files. 
+\begin{lstlisting}
+$ ./file.py -a sub
+/home/rahulaaj/sub/tests.py => File added to tracking
+/home/rahulaaj/sub/merge3.py => File added to tracking
+\end{lstlisting}
+\item \emph{Commit} This command adds the set of all tracking files added, into a repository which can be accessed using the commit tag along with a necessary commit message by the user to describe the new changes in the commit. 
+\begin{lstlisting}
+./file.py -c 'first commit'
+\end{lstlisting}
+\item \emph{Diff} The diff commands on given the filename prints out the difference of the file from the last commit, with $+$ signifying the line has been added, $-$ suggesting that the line has been removed and no first charachter means the line has not been changed in the file.
+\begin{lstlisting}
+$ ./file.py -d sub/tests.py 
+  import unittest
 
+  import tempfile
+
+- import os
+
+  import string
+
++ import time
+
++ import merge3
+
+  import file 
+\end{lstlisting}
+\item \emph{Status} It prints out the current status of all the files which are modified and are still not being commited, that is will list out all the files which needs to be commited in order to get stored in the commited file database.
+\begin{lstlisting}
+$ ./file.py -s
+modified: sub/tests.py
+\end{lstlisting}
+\item \emph{Log} It lists outs the details in the commit log, including the commit tag, author, email and date of all the commits.
+\begin{lstlisting}
+$ ./file.py -l
+Commit: 4fff2246122f98542c57182d97814c05e8f97c853b03d3c8905
+Author: rahulaaj
+Email: rahulajmera91@gmail.com
+Date: 2012-11-01
+
+
+Commit: 16d92f8e981a69bdca0a3abc1f40359a0331f7bf8ccb9022fc6
+Author: rahulaaj
+Email: rahulajmera91@gmail.com
+Date: 2012-11-01
+
+
+\end{lstlisting}
+\item \emph{Pull} It will get the last commit from a different user over the network and for each file in the commit it will find out the file in the current directory of the user and the parent file (the file from which both files have diverged) and merge them using our 3-way merge algorithm as defined earlier in the Code Revision System section, and after successfully merging it creates a new commit with new merged files in the current directory.
+\begin{lstlisting}
+$ ./file.py --pull 127.24.1.166:5000/sub
+Merged sub/merge3.py
+Merged  sub/tests.py
+\end{lstlisting}
+\item \emph{Push} It is the converse of the pull command discussed above, it pushes the last commit of the current user, which is in turn pulled by other users.It basically updates the remote references(files) using the local copy of the references and sends the required files. 
+\begin{lstlisting}
+$ ./file.py --pull 127.24.1.166:5000/sub
+\end{lstlisting}
 \end{itemize}
 \begin{thebibliography}{99}
 \bibitem{wiki}

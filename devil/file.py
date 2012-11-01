@@ -182,7 +182,7 @@ class FileController(object):
         files.close()
         for_commit=lastline.split("commit ")
         commit_tag=for_commit[1].split(" ")[0]
-        c=self.getFile(commit_tag,os.path.abspath(os.path.join(self.directory,filename)))
+        c=self.getFile(commit_tag,filename)
         for line in difflib.ndiff(c,b):
             print(line)
 
