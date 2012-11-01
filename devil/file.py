@@ -520,5 +520,6 @@ def main():
     elif options.clone:
         obj=FileController(os.getcwd())
         obj.clone(options.clone)
+
 if __name__ == "__main__":
     main()

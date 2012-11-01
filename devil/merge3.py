@@ -460,6 +460,9 @@ class Merge3(object):
                 
         return unc
 
+
+## Modified code to suit our purposes. 
+
 def devilMerge(base,mine,other):
     print base,"\n",mine,"\n",other,"\n"
     m = Merge3(base, mine, other)
