@@ -138,7 +138,9 @@ class FileController(object):
 
 
     def clone(self,target):
-        pass
+        self.directory = os.path.basename(target)
+        self.start()
+        self.pull(target)
 
     def status(self):
         files=open(self.trackingfile)
