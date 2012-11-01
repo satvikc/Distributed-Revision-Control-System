@@ -217,7 +217,7 @@ class DevilMainFrame(wx.Frame):
         lines=files.readlines();
         for line in lines:
             line = line.split()
-            status=status+"Commit: " + line[1] + "\n"  + "Author: " + line[2] + "\n" + "Email: " + line[3] + "\n" + "Date: " + line[4] + "\nMsg: "+ line[6] +"\n\n"
+            status=status+"Commit: " + line[1] + "\n"  + "Author: " + line[2] + "\n" + "Email: " + line[3] + "\n" + "Date: " + line[4] + "\nMsg: "+ ' '.join(line[6:]) +"\n\n"
 
         self.text_ctrl_5.SetValue(status)
 

@@ -274,7 +274,7 @@ class FileController(object):
             print("Author: " + line[2])
             print("Email: " + line[3])
             print("Date: " + line[4])
-            print("Msg: " + line[6])
+            print("Msg: " + ' '.join(line[6:]))
             print '\n'
 
 
