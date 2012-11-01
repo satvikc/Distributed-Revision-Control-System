@@ -47,6 +47,7 @@ class FileController(object):
         files.close()
         files=open(self.statusfile,'w')
         files.close()
+        os.makedirs(os.path.join(self.commitfiles))
 
     def add(self,filename):
         """
