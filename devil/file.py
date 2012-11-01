@@ -220,9 +220,12 @@ class FileController(object):
     def getFile(self,committag,filename):
         hashmap = os.path.join(self.objectdir,committag)
         h = getHashNameFromHashmap(hashmap,filename)
+        print h,"<-------\n"
         try:
-            fp = open(os.path.join(self.objectdir,h),'r')
+            print "What is the path ", os.path.join(self.commitfiles,h)
+            fp = open(os.path.join(self.commitfiles,h),'r')
             content = fp.readlines()
+            print "Content--------->",content
             fp.close()
             return content
         except:
