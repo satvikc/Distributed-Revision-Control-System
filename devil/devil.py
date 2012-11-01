@@ -4,6 +4,9 @@
 
 import wx
 import os
+from file import FileController
+from file import merge3
+from file import getLastCommit
 
 # begin wxGlade: extracode
 # end wxGlade
@@ -104,7 +107,9 @@ class DevilMainFrame(wx.Frame):
     def OnCommit(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         msg = self.text_ctrl_2.GetValue()
         """ Commit code here using commit message as msg"""
-        print msg
+        obj=FileController(self.directory)
+        obj.commit(msg)
+        #print msg
 
         # Update commit list in dialog box 
         self.UpdateRevertList()
@@ -112,7 +117,9 @@ class DevilMainFrame(wx.Frame):
 
     def OnInit(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         """ Init the Repo on current directory """
-        print "Init called"
+        obj=FileController(self.directory)
+        obj.start()
+        #print "Init called"
         pass 
 
     def OnAdd(self, event):  # wxGlade: DevilMainFrame.<event_handler>
@@ -125,27 +132,34 @@ class DevilMainFrame(wx.Frame):
             self.label_4.SetLabel(filename)
             wx.Yield()
             """ Add Code Here using """
-            print filename
+            obj=FileController(self.directory)
+            obj.add(filename)
+            #print filename
         dlg.Destroy()
 
     def OnRevert(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         commit = self.combo_box_4.GetValue()
         
         """ Revert to commit """
-        print commit 
+        obj=FileController(self.directory)
+        obj.revert(commit)
+        #print commit 
 
     def OnPull(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         server = self.combo_box_5.GetValue()
         
         """ Pull """
-
-        print server 
+        obj=FileController(self.directory)
+        obj.pull()
+        #print server 
 
     def OnPush(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         server = self.combo_box_6.GetValue()
 
         """ Push """
-        print server 
+        obj=FileController(self.directory)
+        obj.push()
+        #print server 
 
     def OnStatus(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         print "Event handler `OnStatus' not implemented"

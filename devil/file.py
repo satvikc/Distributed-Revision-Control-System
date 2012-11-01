@@ -95,6 +95,7 @@ class FileController(object):
         self.objectdir = os.path.abspath(os.path.join(self.directory,'Devil','object'))
         self.devil=os.path.abspath(os.path.join(self.directory,'Devil'))
         self.commitfiles=os.path.abspath(os.path.join(self.directory,'Devil','object','commitfiles'))
+        self.remotefile=os.path.abspath(os.path.join(self.directory,'Devil','remotefile.txt'))
 
     def start(self):
         """
@@ -112,6 +113,8 @@ class FileController(object):
                 files=open(self.trackingfile,'w')
                 files.close()
                 files=open(self.statusfile,'w')
+                files.close()
+                files=open(self.remotefile,'w')
                 files.close()
                 os.makedirs(os.path.join(self.commitfiles))
         except :
