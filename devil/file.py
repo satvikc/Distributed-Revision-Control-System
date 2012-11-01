@@ -193,19 +193,16 @@ class FileController(object):
         c_to_fetch = [i.split()[1] for i in commits_to_fetch]
         cont = getCommitsContent(directory,c_to_fetch)
         self.uncompressAndWrite(cont)
-        try:
-            parent_commit=[x for x in commits if x in set(mycommits)][-1]
-        except:
-            parent_commit = "commit none"
+        common_commit=[x for x in commits if x in set(mycommits)]
         #print (parent_commit.split()[1]) 
-        parent_file_list=self.getFileList(parent_commit.split()[1])
-        my_file_list=self.getFileList(mycommits[-1].split()[1])
-        other_file_list=self.getFileList(commits[-1].split()[1])
+        parent_file_list=self.getFileList(getLastCommit(common_commit))
+        my_file_list=self.getFileList(getLastCommit(mycommits))
+        other_file_list=self.getFileList(getLastCommit(commits))
         flag=0
         for elem in my_file_list:
                 for temp in other_file_list:
                         if(elem==temp):
-                                dicts=merge3.devilMerge(self.getFile(parent_commit.split()[1],elem[0]),self.getFile(mycommits[-1].split()[1],elem[0]),self.getFile(commits[-1].split()[1],elem[0]))
+                                dicts=merge3.devilMerge(self.getFile(getLastCommit(common_commit),elem[0]),self.getFile(getLastCommit(mycommits),elem[0]),self.getFile(getLastCommit(commits),elem[0]))
                                 files=open(elem[0],'w')
                                 files.write(dicts['md_content'])
                                 files.close()
@@ -309,6 +306,12 @@ class FileController(object):
         unzipdir(self.objectdir,archivename)
 
 # Merge helpers. Remove them when you implement over network.
+
+def getLastCommit(clist):
+    try:
+        return clist[-1].split()[1]
+    except:
+        return None
 
 def getCommits(d):
     f = FileController(d)

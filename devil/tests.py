@@ -81,8 +81,8 @@ class LocalTests(unittest.TestCase):
         self.commit()
         self.g.merge(self.tempdir)
         compareObj = filecmp.dircmp(self.f.commitfiles,self.g.commitfiles)
-        assertTrue(compareObj.left_only == [])
-        assertTrue(compareObj.right_only == [])
+        self.assertTrue(compareObj.left_only == [])
+        self.assertTrue(compareObj.right_only == [])
         shutil.rmtree(self.tempdir2)
 
 
