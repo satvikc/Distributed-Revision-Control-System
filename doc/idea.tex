@@ -7,11 +7,14 @@
 \usepackage{caption}
 \definecolor{lightgrey}{gray}{0.8}
 \lstset{
-    frame=lrbt
+    frame=LRBT
+  , frameround=tttt
+  , framerule = 0pt
+  , classoffset = 0
   , backgroundcolor=\color{lightgrey}
-  , frame=shadowbox
+  , frame=simple
   , rulesepcolor=\color{gray}
-}
+  , basicstyle=\color{black} }
 
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -317,37 +320,27 @@ We are providing the user with the following functionalities:
 $ ./file.py -i
 Enter username:
 rahulaaj
-Enter email 
+Enter email
 rahulajmera91@gmail.com
 \end{lstlisting}
-\item \emph{Add} The add command adds a file or a directory to the set of files which on commiting gets added to the repository of files which can be shared over the network.It basically prepares the content prepared for the next commit by adding the modified files. 
+\item \emph{Add} The add command adds a file or a directory to the set of files which on commiting gets added to the repository of files which can be shared over the network.It basically prepares the content prepared for the next commit by adding the modified files.
 \begin{lstlisting}
 $ ./file.py -a sub
 /home/rahulaaj/sub/tests.py => File added to tracking
 /home/rahulaaj/sub/merge3.py => File added to tracking
 \end{lstlisting}
-\item \emph{Commit} This command adds the set of all tracking files added, into a repository which can be accessed using the commit tag along with a necessary commit message by the user to describe the new changes in the commit. 
+\item \emph{Commit} This command adds the set of all tracking files added, into a repository which can be accessed using the commit tag along with a necessary commit message by the user to describe the new changes in the commit.
 \begin{lstlisting}
 ./file.py -c 'first commit'
 \end{lstlisting}
 \item \emph{Diff} The diff commands on given the filename prints out the difference of the file from the last commit, with $+$ signifying the line has been added, $-$ suggesting that the line has been removed and no first charachter means the line has not been changed in the file.
 \begin{lstlisting}
-$ ./file.py -d sub/tests.py 
-  import unittest
-
-  import tempfile
-
+$ ./file.py -d sub/tests.py
 - import os
-
-
   import string
-
-
 + import time
-
 + import merge3
-
-  import file 
+  import file
 \end{lstlisting}
 \item \emph{Status} It prints out the current status of all the files which are modified and are still not being commited, that is will list out all the files which needs to be commited in order to get stored in the commited file database.
 \begin{lstlisting}
@@ -372,7 +365,7 @@ Date: 2012-11-01
 \end{lstlisting}
 \item \emph{Revert} It takes the current state of the user's directory to the state of the commit with the commit tag specified. It is used in cases when you want to go to a safe state after doing many wrong changes in the current directory.
 \begin{lstlisting}
-$ ./file.py -r 16d92f8e981a69bdca0a3abc1f40359a0331f7bf8ccb9022fc6
+$ ./file.py -r 16d92f8e981a69bdca0a3abc1f40359a0331f7...
 \end{lstlisting}
 \item \emph{Clone} It clones an ongoing project from the network into its workspace, getting all its files and commits in a single go. Basically it could be used by a new user to begin with the project.
 \begin{lstlisting}
@@ -386,7 +379,7 @@ Merged sub/merge3.py
 
 Merged  sub/tests.py
 \end{lstlisting}
-\item \emph{Push} It is the converse of the pull command discussed above, it pushes the last commit of the current user, which is in turn pulled by other users.It basically updates the remote references(files) using the local copy of the references and sends the required files. 
+\item \emph{Push} It is the converse of the pull command discussed above, it pushes the last commit of the current user, which is in turn pulled by other users.It basically updates the remote references(files) using the local copy of the references and sends the required files.
 \begin{lstlisting}
 $ ./file.py --push 127.24.1.166:5000/sub
 
