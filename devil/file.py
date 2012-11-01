@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/python2.6
 #should not be there
 import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys,zlib,tempfile,merge3
 from optparse import OptionParser
@@ -26,7 +26,7 @@ class FileController(object):
         self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
         self.objectdir = os.path.abspath(os.path.join(self.directory,'Devil','object'))
         self.devil=os.path.abspath(os.path.join(self.directory,'Devil'))
-        self.newhashmap='newhashmap.txt'
+        self.commitfiles=os.path.abspath(os.path.join(self.directory,'Devil','object','commitfiles'))
 
     def start(self):
         """
@@ -82,9 +82,9 @@ class FileController(object):
         lines=files.readlines()
         files.close()
         #os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
-        if not (os.path.exists(os.path.join(self.objectdir,hashmap))):
-            os.makedirs(os.path.join(self.objectdir,hashmap))
-            files=open(os.path.join(self.objectdir,hashmap,self.newhashmap),'w')
+        if not (os.path.exists(os.path.join(self.commitfiles))):
+            os.makedirs(os.path.join(self.commitfiles))
+            files=open(os.path.join(self.objectdir,hashmap),'w')
             files.close()
         for line in lines:
                 #print line
@@ -96,13 +96,13 @@ class FileController(object):
                                 content=files.readlines()
                                 files.close()
                                 newhashmap=hashlib.sha224(base64.b64encode((str(content)).encode('ascii'))).hexdigest()
-                                files=open(os.path.join(self.objectdir,hashmap,'newhashmap.txt'),'a')
+                                files=open(os.path.join(self.objectdir,hashmap),'a')
                                 files.write(path[0]+"   "+newhashmap+"\n")
                                 files.close()
-                                shutil.copy2(path[0],os.path.join(self.objectdir,hashmap,newhashmap))
+                                shutil.copy2(path[0],os.path.join(self.commitfiles,newhashmap))
                         elif(os.path.isdir(path[0])== True):
                                 print("in dir")
-                                shutil.copytree(path[0],os.path.join(self.objectdir,hashmap))
+                                shutil.copytree(path[0],os.path.join(self.commitfiles))
         files=open(self.trackingfile,'w')
         for line in lines:
                 path=line.split(" ")
@@ -171,7 +171,7 @@ class FileController(object):
         pass
 
     def revert(self,commit_hash):
-        files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash,self.newhashmap)),'r')
+        files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash),'r'))
         a=files.readlines()
         for line in a:
                 filename=line.split(" ")[0]
@@ -224,19 +224,17 @@ class FileController(object):
 
 
     def getFile(self,committag,filename):
-        object = os.path.join(self.objectdir,committag)
-        hashmap = os.path.join(object,self.newhashmap)
+        hashmap = os.path.join(self.objectdir,committag)
         h = getHashNameFromHashmap(hashmap,filename)
-        fp = open(os.path.join(object,h))
+        fp = open(os.path.join(self.objectdir,h))
         content = fp.readlines()
         fp.close()
         return content
 
     def getFiler(self,committag,filename):
-        object = os.path.join(self.objectdir,committag)
-        hashmap = os.path.join(object,self.newhashmap)
+        hashmap = os.path.join(self.objectdir,committag)
         h = getHashNameFromHashmap(hashmap,filename)
-        fp = open(os.path.join(object,h))
+        fp = open(os.path.join(self.objectdir,h))
         content = fp.read()
         fp.close()
         return content
