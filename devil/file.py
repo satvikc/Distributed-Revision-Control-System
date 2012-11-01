@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+#should not be there
 import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys,zlib
 from optparse import OptionParser
 from utils import fileTracked,getUsername,getHashNameFromHashmap
@@ -81,14 +82,17 @@ class FileController(object):
         for line in lines:
                 #print line
                 path=line.split(" ")
-                if(path[1]=="notcommited\n"):
+                if(path[1]=="notcommited\n" or path[1]=="commited\n"):
                         if(os.path.isfile(path[0])== True):
                                 #print "in file ",path[0]
                                 if not (os.path.exists(os.path.join(self.objectdir,hashmap))):
                                         os.makedirs(os.path.join(self.objectdir,hashmap))
                                         files=open(os.path.join(self.objectdir,hashmap,self.newhashmap),'w')
                                         files.close()
-                                newhashmap=hashlib.sha224(base64.b64encode((path[0]).encode('ascii'))).hexdigest()
+                                files=open(path[0],'r')
+                                content=files.readlines()
+                                files.close()
+                                newhashmap=hashlib.sha224(base64.b64encode((str(content)).encode('ascii'))).hexdigest()
                                 files=open(os.path.join(self.objectdir,hashmap,'newhashmap.txt'),'a')
                                 files.write(path[0]+"   "+newhashmap+"\n")
                                 shutil.copy2(path[0],os.path.join(self.objectdir,hashmap,newhashmap))
@@ -162,10 +166,19 @@ class FileController(object):
         pass
 
     def revert(self,commit_hash):
-        pass
+        files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash,self.newhashmap)),'r')
+        a=files.readlines()
+        for line in a:
+                filename=line.split(" ")[0]
+                content=self.__getFiler(commit_hash,filename)
+                files=open(os.path.join(self.directory,filename),'w')
+                files.write(content)
+                files.close()
 
     def merge(self,directory):
         pass
+
+
     # Helpers
     def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
@@ -176,11 +189,19 @@ class FileController(object):
         object = os.path.join(self.objectdir,committag)
         hashmap = os.path.join(object,self.newhashmap)
         h = getHashNameFromHashmap(hashmap,filename)
-        fp = zlib.open(os.path.join(object,h))
+        fp = open(os.path.join(object,h))
         content = fp.readlines()
         fp.close()
         return content
 
+    def __getFiler(self,committag,filename):
+        object = os.path.join(self.objectdir,committag)
+        hashmap = os.path.join(object,self.newhashmap)
+        h = getHashNameFromHashmap(hashmap,filename)
+        fp = open(os.path.join(object,h))
+        content = fp.read()
+        fp.close()
+        return content
 
 
 def main():
@@ -192,6 +213,7 @@ def main():
     parser.add_option("-s", "--status",help="all not commited files", dest="status",action= "store_true")
     parser.add_option("-l", "--log",help="complete list of commits", dest="log",action= "store_true")
     parser.add_option("-d", "--diff",help="Given a file name shows diff from last commit", dest="diff",action= "store")
+    parser.add_option("-r", "--revert",help="revert current directory to an old commit", dest="revert",action= "store")
     parser.add_option("--change",help="overview of difference b/w two commits", dest="change",action= "store")
     (options, args) = parser.parse_args()
     if options.init:
@@ -218,7 +240,9 @@ def main():
     elif options.diff:
         obj=FileController(os.getcwd())
         obj.diff(options.diff)
-
+    elif options.revert:
+        obj=FileController()
+        obj.revert(options.revert)
 
 if __name__ == "__main__":
     main()
