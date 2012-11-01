@@ -103,7 +103,7 @@ class FileController(object):
         for line in lines:
                 #print line
                 path=line.split(" ")
-                if(path[1]=="notcommited\n" or path[1]=="commited\n"):
+                if(path[1]=="notcommited" or path[1]=="commited"):
                         if(os.path.isfile(path[0])== True):
                                 #print "in file ",path[0]
                                 files=open(path[0],'r')
