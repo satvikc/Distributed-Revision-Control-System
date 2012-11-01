@@ -186,12 +186,11 @@ class DevilMainFrame(wx.Frame):
         #print server 
 
     def OnPush(self, event):  # wxGlade: DevilMainFrame.<event_handler>
-        complete=""
-        #server = self.combo_box_6.GetValue()
-        #loc=self.remote[server]
+        server = self.combo_box_6.GetValue()
+        loc=self.remote[server]
         """ Push """
         obj=FileController(self.directory)
-        obj.push(complete)
+        obj.push(loc)
         self.sb.SetStatusText("Pushed successfully")
         #print server 
 
