@@ -115,6 +115,7 @@ class FileController(object):
                 files=open(self.statusfile,'w')
                 files.close()
                 files=open(self.remotefile,'w')
+                files.write("[Remotes]\n")
                 files.close()
                 os.makedirs(os.path.join(self.commitfiles))
         except :
