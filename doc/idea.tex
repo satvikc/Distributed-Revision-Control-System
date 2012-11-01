@@ -197,6 +197,18 @@ It consists of
   end distributed version control system.
 \end{itemize}
 
+\subsection{Functionalities}
+We are providing the user with the following functionalities:
+\begin{itemize}
+\item \emph{Init} This command initializes all the directories and files which are required to do the revision control, and asks the user for its username and password which behave as the identity of the user for interacting with other users.
+\item \emph{Add} The add command adds a file or a directory to the set of files which on commiting gets added to the repository of files which can be shared over the network. Command to run is $./file.py -a <file$ $or$ $directory>$
+\item \emph{Commit} This command adds the set of all tracking files added into a repository which can be accessed using the commit tag. Command to run is $./file.py -c <message$ $string>$
+\item \emph{Diff} The diff commands on given the filename prints out the difference of the file from the last commit, with $+$ signifying the line has been added, $-$ suggesting that the line has been removed and no first charachter means the line has not been changed in the file. Command to run is $./file.py -d <file>$
+\item \emph{Status} It prints out the current status of all the files which are modified and are still not being commited, that is will list out all the files which needs to be commited in order to get stored in the commited file database. Command to run is $./file.py -s$
+\item \emph{Pull} It will get the last commit from a different user over the network and for each file in the commit it will find out the file in the current directory of the user and the parent file (the file from which both files have diverged) and merge them using our 3-way merge algorithm as defined earlier in the Code Revision System section, and after successfully merging it creates a new commit with new merged files in the current directory. Command to run is $./file.py -pull <file>$
+\item \emph{Push} It is the converse of the pull command discussed above, it pushes the last commit of the current user, which is in turn pulled by other users. Command to run is $./file.py -push <file>$
+
+\end{itemize}
 \begin{thebibliography}{99}
 \bibitem{wiki}
 wikipedia \url{http://en.wikipedia.org/wiki/Distributed_revision_control}
