@@ -66,7 +66,7 @@ class DevilClient(pb.Root):
                         obj.add(elem[0])
                         if(dicts['conflict']==0 and dicts['merged']!=0):
                                 print("Merged "+elem[0]+"\n")
-                        else:
+                        elif(dicts['conflict']==1):
                                 print("Merged with conflicts in "+elem[0]+" not commiting.Please commit after manually changing")
                                 flag=1
                 else:
