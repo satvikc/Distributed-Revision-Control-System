@@ -233,7 +233,8 @@ class FileController(object):
 
 
     def clone(self,target):
-        self.directory = os.path.basename(target)
+        sdirectory=target.split(":")[1][4:]
+        self.directory = os.path.basename(sdirectory)
         self.start()
         self.pull(target)
 
@@ -481,6 +482,7 @@ def main():
     parser.add_option("--change",help="overview of difference b/w two commits", dest="change",action= "store")
     parser.add_option("-p", "--pull", help = "pull and merge commits and files", dest="pull",action= "store")
     parser.add_option("--push", help = "pushes the commits to the ipport provided", dest="push",action= "store")
+    parser.add_option("--clone", help = "clones a target directory into its folder", dest="clone",action= "store")
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
@@ -515,6 +517,8 @@ def main():
     elif options.push:
         obj=FileController(os.getcwd())
         obj.push(options.push)
-
+    elif options.clone:
+        obj=FileController(os.getcwd())
+        obj.clone(options.clone)
 if __name__ == "__main__":
     main()
