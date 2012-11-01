@@ -19,7 +19,7 @@ class LocalTests(unittest.TestCase):
         self.g = None
 
     def tearDown(self):
-        shutil.rmtree(self.tempdir)
+        #shutil.rmtree(self.tempdir)
         pass
 
     def test_start(self):
@@ -63,6 +63,7 @@ class LocalTests(unittest.TestCase):
         self.assertTrue(os.path.isdir(cdir))
         # check hashmapfile 
         hfile = os.path.join(self.f.objectdir,committag)
+        print hfile
         self.assertTrue(os.path.isfile(hfile))
         # check all files copied 
 

@@ -73,6 +73,21 @@ class FileController(object):
             else:
                 print(filename + " => File already tracked")
 
+        self.update_modify_time()
+
+    def update_modify_time(self):
+        fp = open(self.trackingfile,'r')
+        cont = fp.readlines()
+        fp.close()
+        fp = open(self.trackingfile,'w')
+        for i in cont:
+            split = i.split()
+            name = split[0]
+            status = split[1]
+            fp.write(name + " " + status + " " + str(os.path.getmtime(name))+'\n')
+        fp.close()
+
+
     def commit(self,message):
         username,email = getUsername(self.userfile)
         dateandtime=str(datetime.datetime.now())
@@ -110,6 +125,7 @@ class FileController(object):
         files=open(self.statusfile,'a')
         files.write("commit "+hashmap+" "+username+" "+email+" "+dateandtime+" "+message+"\n")
         files.close()
+        self.update_modify_time()
 
     def rename(self,newname):
         if os.path.exists(newname):
@@ -124,11 +140,15 @@ class FileController(object):
     def clone(self,target):
         pass
 
-    def log(self):
+    def status(self):
         files=open(self.trackingfile)
         lines=files.readlines();
-        for line in lines:
-                print (line)
+        splitted = [(l[0],l[1],l[2]) for l in (y.split() for y in lines)]
+        for (f,st,md) in splitted:
+            if st != 'commited':
+                print("added: " + f)
+            elif not (md == str(os.path.getmtime(f))):
+                print("modified: " + f)
 
 
     def change(self,commit1,commit2):
@@ -137,15 +157,16 @@ class FileController(object):
         dc=filecmp.dircmp(dir1,dir2)
         dc.report_full_closure()
 
-    def status(self):
+    def log(self):
         files=open(self.statusfile)
         lines=files.readlines();
         for line in lines:
             line = line.split()
-            print("Commit: ",line[1])
-            print("Author: ",line[2])
-            print("Email: ",line[3])
-            print("Date: ",line[4])
+            print("Commit: " + line[1])
+            print("Author: " + line[2])
+            print("Email: " + line[3])
+            print("Date: " + line[4])
+            print '\n'
 
 
     def diff(self,filename):
