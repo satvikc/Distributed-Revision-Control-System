@@ -9,7 +9,7 @@ class FileController(object):
     Class to perform all the local functionalities of the version
     control system.
     """
-    def __init__(self):
+    def __init__(self,dirc):
         """
         Args:
           directory(str): Full path of the directory where the
@@ -17,7 +17,7 @@ class FileController(object):
         Returns:
           FileController Object
         """
-        self.directory = os.getcwd()
+        self.directory = dirc
         self.statusfile = os.path.abspath(os.path.join(self.directory,'Devil','status.txt'))
         self.userfile=os.path.abspath(os.path.join(self.directory,'Devil','username.txt'))
         self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
@@ -164,6 +164,8 @@ class FileController(object):
     def revert(self,commit_hash):
         pass
 
+    def merge(self,directory):
+        pass
     # Helpers
     def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
@@ -194,27 +196,27 @@ def main():
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.start()
     elif options.add:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         #print options.add
         obj.add(options.add)
     elif options.commit:
         obj=FileController()
         obj.commit(options.commit)
     elif options.status:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.status()
     elif options.log:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.log()
     elif options.change:
         clist=options.change.split("..")
         obj=FileController()
         obj.change(clist[0],clist[1])
     elif options.diff:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.diff(options.diff)
 
 

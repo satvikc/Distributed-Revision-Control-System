@@ -27,3 +27,6 @@ def getHashNameFromHashmap(hashfile,name):
             return sp[1]
     return None 
 
+def GetAllCommits(directory):
+    pass
+
