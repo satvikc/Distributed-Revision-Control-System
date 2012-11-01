@@ -4,6 +4,7 @@ from twisted.spread import pb
 from twisted.internet import reactor
 from file import FileController
 from file import merge3
+from file import getLastCommit
 class DevilClient(pb.Root):
    def connect(self):
         clientfactory = pb.PBClientFactory()
@@ -15,28 +16,32 @@ class DevilClient(pb.Root):
    def got_connected(self,result):
         self.result=result
         obj=FileController(os.getcwd())
-        d=result.callRemote("getCommits",obj.directory)
+        d=result.callRemote("getCommits","../devil2")
         d.addCallback(self.gotCommits)
 
    def gotCommits(self,commits):
         obj=FileController(os.getcwd())
         mycommits = obj.getAllCommits()
+        print commits,"\n"
+        print mycommits,"\n"
         commits_to_fetch = set(commits).difference(set(mycommits))
         fp = open(obj.statusfile,'a')
         for k in commits_to_fetch:
             fp.write(k)
         fp.close()
         c_to_fetch = [i.split()[1] for i in commits_to_fetch]
+        print c_to_fetch
         if c_to_fetch == []:
                 reactor.stop()
         else:
-                d=self.result.callRemote("getCommitContent",obj.directory,c_to_fetch)
+                d=self.result.callRemote("getCommitContent","../devil2",c_to_fetch)
                 d.addCallback(self.gotCommitsContent,commits,mycommits)
 
    def gotCommitsContent(self,cont,commits,mycommits):
         obj=FileController(os.getcwd())
         obj.uncompressAndWrite(cont)
         common_commit=[x for x in commits if x in set(mycommits)]
+        print getLastCommit(common_commit),"\n"
         #print (parent_commit.split()[1])
         parent_file_list=obj.getFileList(getLastCommit(common_commit))
         my_file_list=obj.getFileList(getLastCommit(mycommits))
@@ -46,11 +51,16 @@ class DevilClient(pb.Root):
         flag=0
         for elem in my_file_list:
                 for temp in other_file_list:
-                        if(elem==temp):
+                        if(elem[0]==temp[0]):
                                 dicts=merge3.devilMerge(obj.getFile(getLastCommit(common_commit),elem[0]),obj.getFile(getLastCommit(mycommits),elem[0]),obj.getFile(getLastCommit(commits),elem[0]))
+                                print dicts
+                                #reactor.stop()
+                                """
+                                print "opening file ",elem[0]
                                 files=open(elem[0],'w')
                                 files.write(dicts['md_content'])
                                 files.close()
+                                """
                                 if(dicts['conflict']==0 and dicts['merged']!=0):
                                         print("Merged "+elem[0]+"\n")
                                 else:

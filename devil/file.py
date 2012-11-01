@@ -108,7 +108,7 @@ class FileController(object):
                 files.write(os.path.relpath(path[0],self.directory) + " commited\n")
         files.close()
         files=open(self.statusfile,'a')
-        files.write("commit "+hashmap+" "+username+" "+email+" "+dateandtime+"\n")
+        files.write("commit "+hashmap+" "+username+" "+email+" "+dateandtime+" "+message+"\n")
         files.close()
 
     def rename(self,newname):
@@ -125,7 +125,7 @@ class FileController(object):
         pass
 
     def log(self):
-        files=open(self.statusfile)
+        files=open(self.trackingfile)
         lines=files.readlines();
         for line in lines:
                 print (line)
@@ -308,6 +308,7 @@ class FileController(object):
 
 def getLastCommit(clist):
     try:
+        print "getlastcommit of",clist
         return clist[-1].split()[1]
     except:
         return None

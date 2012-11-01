@@ -461,6 +461,7 @@ class Merge3(object):
         return unc
 
 def devilMerge(base,mine,other):
+    print base,"\n",mine,"\n",other,"\n"
     m = Merge3(base, mine, other)
     mg = list(m.merge_groups())
     conflicts = 0
