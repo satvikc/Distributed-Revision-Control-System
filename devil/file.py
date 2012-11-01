@@ -49,29 +49,36 @@ class DevilClient(pb.Root):
         #print (parent_commit.split()[1])
         parent_file_list=obj.getFileList(getLastCommit(common_commit))
         my_file_list=obj.getFileList(getLastCommit(mycommits))
-        #print my_file_list,"\n"
+        print my_file_list,"\n"
         other_file_list=obj.getFileList(getLastCommit(commits))
-        #print other_file_list,"\n"
+        print other_file_list,"\n"
         flag=0
-        for elem in my_file_list:
-                for temp in other_file_list:
-                        if(elem[0]==temp[0]):
-                                dicts=merge3.devilMerge(obj.getFile(getLastCommit(common_commit),elem[0]),obj.getFile(getLastCommit(mycommits),elem[0]),obj.getFile(getLastCommit(commits),elem[0]))
-                                #print dicts
-                                #reactor.stop()
-                                
-                                #print "opening file ",elem[0]
-                                files=open(elem[0],'w')
-                                files.write(dicts['md_content'])
-                                files.close()
-                                
-                                if(dicts['conflict']==0 and dicts['merged']!=0):
-                                        print("Merged "+elem[0]+"\n")
-                                else:
-                                        print("Merged with conflicts in "+elem[0]+" not commiting.Please commit after manually changing")
-                                        flag=1
+        for elem in other_file_list:
+                if(elem[0] in [x[0] for x in my_file_list]):
+                        dicts=merge3.devilMerge(obj.getFile(getLastCommit(common_commit),elem[0]),obj.getFile(getLastCommit(mycommits),elem[0]),obj.getFile(getLastCommit(commits),elem[0]))
+                        #print dicts
+                        #reactor.stop()
+                        
+                        #print "opening file ",elem[0]
+                        files=open(elem[0],'w')
+                        files.write(dicts['md_content'])
+                        files.close()
+                        obj.add(elem[0])
+                        if(dicts['conflict']==0 and dicts['merged']!=0):
+                                print("Merged "+elem[0]+"\n")
+                        else:
+                                print("Merged with conflicts in "+elem[0]+" not commiting.Please commit after manually changing")
+                                flag=1
+                else:
+                        files=open(elem[0],'w')
+                        content=obj.getFiler(getLastCommit(commits),elem[0])
+                        files.write(content)
+                        files.close()
+                        obj.add(elem[0])
+                        
         if(flag==0):
                 obj.commit('auto-merged successfull')
+        print "Pull Successfull\n"
         reactor.stop()
 
 
