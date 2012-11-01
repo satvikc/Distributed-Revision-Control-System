@@ -64,11 +64,11 @@ class DevilClient(pb.Root):
                         files.write(dicts['md_content'])
                         files.close()
                         obj.add(elem[0])
-                        if(dicts['conflict']==0 and dicts['merged']!=0):
-                                print("Merged "+elem[0]+"\n")
-                        elif(dicts['conflict']==1):
+                        if(dicts['conflict']==1):
                                 print("Merged with conflicts in "+elem[0]+" not commiting.Please commit after manually changing")
                                 flag=1
+                        else:
+                                        print("Merged "+elem[0]+" successfully\n")
                 else:
                         files=open(elem[0],'w')
                         content=obj.getFiler(getLastCommit(commits),elem[0])
