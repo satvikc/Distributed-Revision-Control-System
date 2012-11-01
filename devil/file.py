@@ -8,7 +8,8 @@ from twisted.spread import pb
 from twisted.internet import reactor
 
 class DevilClient(pb.Root):
-   def connect(self,ip,port,sdirectory):
+   def connect(self,directory,ip,port,sdirectory):
+        self.directory=directory
         clientfactory = pb.PBClientFactory()
         reactor.connectTCP(ip, port, clientfactory)
         d = clientfactory.getRootObject()
@@ -17,13 +18,13 @@ class DevilClient(pb.Root):
 
    def got_connected(self,result,sdirectory):
         self.result=result
-        obj=FileController(os.getcwd())
-        #print str(os.getcwd())
+        obj=FileController(self.directory)
+        #print str(self.directory=directory)
         d=result.callRemote("getCommits",sdirectory)
         d.addCallback(self.gotCommits,sdirectory)
 
    def gotCommits(self,commits,sdirectory):
-        obj=FileController(os.getcwd())
+        obj=FileController(self.directory)
         mycommits = obj.getAllCommits()
         #print commits,"\n"
         #print mycommits,"\n"
@@ -41,7 +42,7 @@ class DevilClient(pb.Root):
                 d.addCallback(self.gotCommitsContent,commits,mycommits)
 
    def gotCommitsContent(self,cont,commits,mycommits):
-        obj=FileController(os.getcwd())
+        obj=FileController(self.directory)
         obj.uncompressAndWrite(cont)
         common_commit=[x for x in commits if x in set(mycommits)]
         #print getLastCommit(common_commit),"\n"
@@ -233,10 +234,11 @@ class FileController(object):
 
 
     def clone(self,target):
-        sdirectory=target.split(":")[1][4:]
-        self.directory = os.path.basename(sdirectory)
-        self.start()
-        self.pull(target)
+        print "not implemented\n"
+        #sdirectory=target.split(":")[1][4:]
+        #self.directory = os.path.basename(sdirectory)
+        #self.start()
+        #self.pull(target)
 
     def status(self):
         files=open(self.trackingfile)
@@ -287,7 +289,7 @@ class FileController(object):
         port=int(istring.split(":")[1].split("/")[0])
         sdirectory=istring.split(":")[1][4:]
         #print ip,str(port),sdirectory,"\n"
-        DevilClient().connect(ip,port,sdirectory)
+        DevilClient().connect(self.directory,ip,port,sdirectory)
         reactor.run()
 
     def push(self,istring):
@@ -518,8 +520,11 @@ def main():
         obj=FileController(os.getcwd())
         obj.push(options.push)
     elif options.clone:
-        obj=FileController(os.getcwd())
-        obj.clone(options.clone)
+        sdirectory=(options.clone).split(":")[1][4:]
+        temp=os.path.join(os.getcwd(),os.path.basename(sdirectory))
+        obj=FileController(temp)
+        obj.start()
+        obj.pull(options.clone)
 
 if __name__ == "__main__":
     main()
