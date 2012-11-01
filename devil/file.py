@@ -4,6 +4,75 @@ from optparse import OptionParser
 from utils import fileTracked,getUsername,getHashNameFromHashmap
 from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
+from twisted.spread import pb
+from twisted.internet import reactor
+
+class DevilClient(pb.Root):
+   def connect(self,ip,port,sdirectory):
+        clientfactory = pb.PBClientFactory()
+        reactor.connectTCP(ip, port, clientfactory)
+        d = clientfactory.getRootObject()
+        d.addCallback(self.got_connected,sdirectory)
+
+
+   def got_connected(self,result,sdirectory):
+        self.result=result
+        obj=FileController(os.getcwd())
+        #print str(os.getcwd())
+        d=result.callRemote("getCommits",sdirectory)
+        d.addCallback(self.gotCommits,sdirectory)
+
+   def gotCommits(self,commits,sdirectory):
+        obj=FileController(os.getcwd())
+        mycommits = obj.getAllCommits()
+        #print commits,"\n"
+        #print mycommits,"\n"
+        commits_to_fetch = set(commits).difference(set(mycommits))
+        fp = open(obj.statusfile,'a')
+        for k in commits_to_fetch:
+            fp.write(k)
+        fp.close()
+        c_to_fetch = [i.split()[1] for i in commits_to_fetch]
+        #print c_to_fetch
+        if c_to_fetch == []:
+                reactor.stop()
+        else:
+                d=self.result.callRemote("getCommitContent",sdirectory,c_to_fetch)
+                d.addCallback(self.gotCommitsContent,commits,mycommits)
+
+   def gotCommitsContent(self,cont,commits,mycommits):
+        obj=FileController(os.getcwd())
+        obj.uncompressAndWrite(cont)
+        common_commit=[x for x in commits if x in set(mycommits)]
+        #print getLastCommit(common_commit),"\n"
+        #print (parent_commit.split()[1])
+        parent_file_list=obj.getFileList(getLastCommit(common_commit))
+        my_file_list=obj.getFileList(getLastCommit(mycommits))
+        #print my_file_list,"\n"
+        other_file_list=obj.getFileList(getLastCommit(commits))
+        #print other_file_list,"\n"
+        flag=0
+        for elem in my_file_list:
+                for temp in other_file_list:
+                        if(elem[0]==temp[0]):
+                                dicts=merge3.devilMerge(obj.getFile(getLastCommit(common_commit),elem[0]),obj.getFile(getLastCommit(mycommits),elem[0]),obj.getFile(getLastCommit(commits),elem[0]))
+                                #print dicts
+                                #reactor.stop()
+                                
+                                #print "opening file ",elem[0]
+                                files=open(elem[0],'w')
+                                files.write(dicts['md_content'])
+                                files.close()
+                                
+                                if(dicts['conflict']==0 and dicts['merged']!=0):
+                                        print("Merged "+elem[0]+"\n")
+                                else:
+                                        print("Merged with conflicts in "+elem[0]+" not commiting.Please commit after manually changing")
+                                        flag=1
+        if(flag==0):
+                obj.commit('auto-merged successfull')
+        reactor.stop()
+
 
 
 class FileController(object):
@@ -115,7 +184,7 @@ class FileController(object):
                                 files.close()
                                 shutil.copy2(path[0],os.path.join(self.commitfiles,newhashmap))
                         elif(os.path.isdir(path[0])== True):
-                                print("in dir")
+                                #print("in dir")
                                 shutil.copytree(path[0],os.path.join(self.commitfiles))
         files=open(self.trackingfile,'w')
         for line in lines:
@@ -187,11 +256,20 @@ class FileController(object):
             print(line)
 
 
-    def pull(self,directory):
-        self.merge(directory)
+    def pull(self,istring):
+        ip=istring.split(":")[0]
+        port=int(istring.split(":")[1].split("/")[0])
+        sdirectory=istring.split(":")[1][4:]
+        #print ip,str(port),sdirectory,"\n"
+        DevilClient().connect(ip,port,sdirectory)
+        reactor.run()
 
-    def push(self,url):
-        pass
+    def push(self,istring):
+        ip=istring.split(":")[0]
+        port=int(istring.split(":")[1].split("/")[0])
+        sdirectory=istring.split(":")[1][4:]
+        DevilClient().connect(ip,port,sdirectory)
+        reactor.run()
 
     def revert(self,commit_hash):
         files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash)),'r')
@@ -335,7 +413,6 @@ class FileController(object):
 
 def getLastCommit(clist):
     try:
-        print "getlastcommit of",clist
         return clist[-1].split()[1]
     except:
         return None
@@ -359,7 +436,6 @@ def zipdir(basedir, archivename):
                 z.write(absfn, zfn)
 
 def unzipdir(targetdir, archivename):
-    print(targetdir)
     assert os.path.isdir(targetdir)
     assert os.path.isfile(archivename)
     zip_file = ZipFile(archivename, 'r')
@@ -379,6 +455,7 @@ def main():
     parser.add_option("-r", "--revert",help="revert current directory to an old commit", dest="revert",action= "store")
     parser.add_option("--change",help="overview of difference b/w two commits", dest="change",action= "store")
     parser.add_option("-p", "--pull", help = "pull and merge commits and files", dest="pull",action= "store")
+    parser.add_option("--push", help = "pushes the commits to the ipport provided", dest="push",action= "store")
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
@@ -410,6 +487,9 @@ def main():
     elif options.pull:
         obj=FileController(os.getcwd())
         obj.pull(options.pull)
+    elif options.push:
+        obj=FileController(os.getcwd())
+        obj.push(options.push)
 
 if __name__ == "__main__":
     main()
