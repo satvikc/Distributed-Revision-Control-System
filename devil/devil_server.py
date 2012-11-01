@@ -12,12 +12,18 @@ class DevilServer(pb.Root):
         return f.compressAndSend(commit)
 
     def remote_push(self,directory,loc):
+        print loc,"\n"
+        print directory
+        print "received push request"
         f = FileController(directory)
-        w = f.pull(loc)
-        return w
+        f.pull(loc)
+        print "pull completed"
+        return 1
 
 if __name__ == '__main__':
     serverfactory = pb.PBServerFactory(DevilServer())
     reactor.listenTCP(7000, serverfactory)
+    #serverfactory2 = pb.PBServerFactory(DevilServer())
+    #reactor.listenTCP(7001, serverfactory2)
     reactor.run()
 

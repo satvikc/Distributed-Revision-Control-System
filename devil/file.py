@@ -7,6 +7,23 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from twisted.spread import pb
 from twisted.internet import reactor
 
+class DevilClientPush(pb.Root):
+   def connect(self,directory,ip,port,sdirectory,selfip,selfport):
+        self.directory=directory
+        clientfactory = pb.PBClientFactory()
+        reactor.connectTCP(ip, port, clientfactory)
+        d = clientfactory.getRootObject()
+        d.addCallback(self.got_connected,sdirectory,selfip,selfport)
+
+
+   def got_connected(self,result,sdirectory,selfip,selfport):
+        loc=selfip+":"+str(selfport)+sdirectory
+        d=result.callRemote("push",self.directory,loc)
+        d.addCallback(self.got_push)
+
+   def got_push(self,w):
+        reactor.stop()
+
 class DevilClient(pb.Root):
    def connect(self,directory,ip,port,sdirectory):
         self.directory=directory
@@ -299,14 +316,17 @@ class FileController(object):
         sdirectory=istring.split(":")[1][4:]
         #print ip,str(port),sdirectory,"\n"
         DevilClient().connect(self.directory,ip,port,sdirectory)
-        reactor.run()
+        
 
     def push(self,istring):
-        ip=istring.split(":")[0]
-        port=int(istring.split(":")[1].split("/")[0])
-        sdirectory=istring.split(":")[1][4:]
-        DevilClient().connect(ip,port,sdirectory)
-        reactor.run()
+        selfip=istring.split(":")[0]
+        #localhost:7000localhost:7001/home/rahulaaj/devil/test
+        selfport=int(istring.split(":")[1][0:4])
+        ip=istring.split(":")[1][4:]
+        port=int(istring.split(":")[2].split("/")[0])
+        sdirectory=istring.split(":")[2][4:]
+        print selfip,str(selfport),ip,str(port),sdirectory,"\n"
+        DevilClientPush().connect(sdirectory,ip,port,self.directory,selfip,selfport)
 
     def revert(self,commit_hash):
         files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash)),'r')
@@ -525,9 +545,11 @@ def main():
     elif options.pull:
         obj=FileController(os.getcwd())
         obj.pull(options.pull)
+        reactor.run()
     elif options.push:
         obj=FileController(os.getcwd())
         obj.push(options.push)
+        reactor.run()
     elif options.clone:
         sdirectory=(options.clone).split(":")[1][4:]
         temp=os.path.join(os.getcwd(),os.path.basename(sdirectory))
@@ -535,6 +557,7 @@ def main():
         obj.start()
         os.chdir(temp)
         obj.pull(options.clone)
+        reactor.run()
 
 if __name__ == "__main__":
     main()
