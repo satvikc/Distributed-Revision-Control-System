@@ -79,7 +79,8 @@ class FileController(object):
         dateandtime=str(datetime.datetime.now())
         hashmap=hashlib.sha224(base64.b64encode((username+email+dateandtime).encode('ascii'))).hexdigest()
         files=open(self.trackingfile,'r')
-        lines=files.readlines();
+        lines=files.readlines()
+        files.close()
         #os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
         for line in lines:
                 #print line
@@ -97,6 +98,7 @@ class FileController(object):
                                 newhashmap=hashlib.sha224(base64.b64encode((str(content)).encode('ascii'))).hexdigest()
                                 files=open(os.path.join(self.objectdir,hashmap,'newhashmap.txt'),'a')
                                 files.write(path[0]+"   "+newhashmap+"\n")
+                                files.close()
                                 shutil.copy2(path[0],os.path.join(self.objectdir,hashmap,newhashmap))
                         elif(os.path.isdir(path[0])== True):
                                 print("in dir")
@@ -108,6 +110,7 @@ class FileController(object):
         files.close()
         files=open(self.statusfile,'a')
         files.write("commit "+hashmap+" "+username+" "+email+" "+dateandtime+"\n")
+        files.close()
 
     def rename(self,newname):
         if os.path.exists(newname):

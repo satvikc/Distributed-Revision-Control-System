@@ -472,6 +472,7 @@ def main(argv):
     #for sr in m3.find_sync_regions():
     #    print sr
     mg = list(m.merge_groups())
+    print(mg)
     conflicts = 0
     for g in mg:
         if g[0]=='conflict': 
