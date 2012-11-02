@@ -6,7 +6,7 @@ def fileTracked(filename,tracking_file):
     files.close()
     for line in lines:
         path=line.split(" ")
-        if(path[0] == os.path.abspath(filename)):
+        if(path[0] == filename):
             return False 
     return True 
 

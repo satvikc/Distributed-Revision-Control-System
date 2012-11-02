@@ -60,6 +60,7 @@ class DevilClient(pb.Root):
 
    def gotCommitsContent(self,cont,commits,mycommits):
         obj=FileController(self.directory)
+        #print ">>>",self.directory,"<<<"
         obj.uncompressAndWrite(cont)
         common_commit=[x for x in commits if x in set(mycommits)]
         #print getLastCommit(common_commit),"\n"
@@ -91,6 +92,7 @@ class DevilClient(pb.Root):
                         content=obj.getFiler(getLastCommit(commits),elem[0])
                         files.write(content)
                         files.close()
+                        #print elem[0]
                         obj.add(elem[0])
                         
         if(flag==0):
@@ -114,13 +116,13 @@ class FileController(object):
           FileController Object
         """
         self.directory = dirc
-        self.statusfile = os.path.abspath(os.path.join(self.directory,'Devil','status.txt'))
-        self.userfile=os.path.abspath(os.path.join(self.directory,'Devil','username.txt'))
-        self.trackingfile=os.path.abspath(os.path.join(self.directory,'Devil','files.txt'))
-        self.objectdir = os.path.abspath(os.path.join(self.directory,'Devil','object'))
-        self.devil=os.path.abspath(os.path.join(self.directory,'Devil'))
-        self.commitfiles=os.path.abspath(os.path.join(self.directory,'Devil','object','commitfiles'))
-        self.remotefile=os.path.abspath(os.path.join(self.directory,'Devil','remotefile.txt'))
+        self.statusfile = os.path.join(self.directory,'Devil','status.txt')
+        self.userfile=os.path.join(self.directory,'Devil','username.txt')
+        self.trackingfile=os.path.join(self.directory,'Devil','files.txt')
+        self.objectdir = os.path.join(self.directory,'Devil','object')
+        self.devil=os.path.join(self.directory,'Devil')
+        self.commitfiles=os.path.join(self.directory,'Devil','object','commitfiles')
+        self.remotefile=os.path.join(self.directory,'Devil','remotefile.txt')
 
     def start(self):
         """
@@ -179,24 +181,30 @@ class FileController(object):
           FileOrDirectoryDoesNotExist : When the file or directory
           does not exist.
         """
-        filename = os.path.abspath(filename)
+        relpath = filename
+        #print "FILE>>",filename
+        #filename = os.path.relpath(filename,self.directory)
+        #print "ABSPATH >>",filename
+        #relpath = os.path.relpath(filename,self.directory)
+        #print "RELP>>",relpath
         if(os.path.isdir(filename)):
             for i in os.listdir(filename):
                 self.add(os.path.join(filename,i))
         else:
-            if(fileTracked(filename,self.trackingfile)):
-                print(filename + " => File added to tracking")
+            if(fileTracked(relpath,self.trackingfile)):
+                print(relpath + " => File added to tracking")
                 files=open(self.trackingfile,'a')
-                files.write(filename + " notcommited\n")
+                files.write( relpath + " notcommited\n")
                 files.close()
             else:
-                print(filename + " => File already tracked")
+                print(relpath + " => File already tracked")
 
         self.update_modify_time()
 
     def update_modify_time(self):
         fp = open(self.trackingfile,'r')
         cont = fp.readlines()
+        print str(cont)
         fp.close()
         fp = open(self.trackingfile,'w')
         for i in cont:
@@ -213,6 +221,7 @@ class FileController(object):
         hashmap=hashlib.sha224(base64.b64encode((username+email+dateandtime).encode('ascii'))).hexdigest()
         files=open(self.trackingfile,'r')
         lines=files.readlines()
+        print "LINES >>",lines
         files.close()
         #os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
         if not (os.path.exists(os.path.join(self.commitfiles))):
@@ -221,7 +230,8 @@ class FileController(object):
         files.close()
         for line in lines:
                 #print line
-                path=line.split(" ")
+                path=line.split()
+         
                 if(path[1]=="notcommited" or path[1]=="commited"):
                         if(os.path.isfile(path[0])== True):
                                 #print "in file ",path[0]
@@ -230,7 +240,7 @@ class FileController(object):
                                 files.close()
                                 newhashmap=hashlib.sha224(base64.b64encode((str(content)).encode('ascii'))).hexdigest()
                                 files=open(os.path.join(self.objectdir,hashmap),'a')
-                                files.write(os.path.relpath(path[0],self.directory)+"   "+newhashmap+"\n")
+                                files.write(path[0]+"   "+newhashmap+"\n")
                                 files.close()
                                 shutil.copy2(path[0],os.path.join(self.commitfiles,newhashmap))
                         elif(os.path.isdir(path[0])== True):
@@ -238,8 +248,10 @@ class FileController(object):
                                 shutil.copytree(path[0],os.path.join(self.commitfiles))
         files=open(self.trackingfile,'w')
         for line in lines:
-                path=line.split(" ")
-                files.write(os.path.relpath(path[0],self.directory) + " commited\n")
+                path = line.split()
+                #relpath = os.path.relpath(path[0],self.directory)
+                #print "RELPATH>>",relpath," PATH0>> ",path[0]
+                files.write( path[0] + " commited\n")
         files.close()
         files=open(self.statusfile,'a')
         files.write("commit "+hashmap+" "+username+" "+email+" "+dateandtime+" "+message+"\n")
@@ -276,8 +288,8 @@ class FileController(object):
 
 
     def change(self,commit1,commit2):
-        dir1=os.path.abspath(os.path.join(self.objectdir,commit1))
-        dir2=os.path.abspath(os.path.join(self.objectdir,commit2))
+        dir1=os.path.join(self.objectdir,commit1)
+        dir2=os.path.join(self.objectdir,commit2)
         dc=filecmp.dircmp(dir1,dir2)
         dc.report_full_closure()
 
@@ -300,7 +312,7 @@ class FileController(object):
         a=files.readlines();
         lastline=a[len(a)-1]
         files.close()
-        files=open(os.path.abspath(os.path.join(self.directory,filename)),'r')
+        files=open(os.path.join(self.directory,filename),'r')
         b=files.readlines();
         files.close()
         for_commit=lastline.split("commit ")
@@ -329,7 +341,7 @@ class FileController(object):
         DevilClientPush().connect(sdirectory,ip,port,self.directory,selfip,selfport)
 
     def revert(self,commit_hash):
-        files=open(os.path.abspath(os.path.join(self.objectdir,commit_hash)),'r')
+        files=open(os.path.join(self.objectdir,commit_hash),'r')
         a=files.readlines()
         for line in a:
                 filename=line.split(" ")[0]

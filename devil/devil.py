@@ -8,7 +8,7 @@ from file import FileController
 from file import merge3
 from file import getLastCommit
 import ConfigParser
-
+from twisted.internet import reactor
 # begin wxGlade: extracode
 # end wxGlade
 
@@ -46,7 +46,7 @@ class DevilMainFrame(wx.Frame):
         self.text_ctrl_5 = wx.TextCtrl(self.notebook_1_pane_2, -1, "", style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_LINEWRAP)
         self.notebook_1_pane_3 = wx.Panel(self.notebook_1, -1)
         self.button_2 = wx.Button(self.notebook_1_pane_3, -1, "save")
-        self.text_ctrl_1 = wx.TextCtrl(self.notebook_1_pane_3, -1, "", style=wx.TE_MULTILINE | wx.TE_LINEWRAP)
+        self.text_ctrl_1 = wx.TextCtrl(self.notebook_1_pane_3, -1, remotecontent, style=wx.TE_MULTILINE | wx.TE_LINEWRAP)
 
         self.sb = self.CreateStatusBar()
 
@@ -194,8 +194,11 @@ class DevilMainFrame(wx.Frame):
         server = self.combo_box_6.GetValue()
         loc=self.remote[server]
         """ Push """
+        print self.directory,"\n"
         obj=FileController(self.directory)
+        print myloc+loc,"\n"
         obj.push(myloc+loc)
+        reactor.run()
         self.sb.SetStatusText("Pushed successfully")
         #print server 
 
