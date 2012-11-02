@@ -82,16 +82,16 @@ class FileController(object):
         lines=files.readlines()
         files.close()
         #os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
+        if not (os.path.exists(os.path.join(self.objectdir,hashmap))):
+            os.makedirs(os.path.join(self.objectdir,hashmap))
+            files=open(os.path.join(self.objectdir,hashmap,self.newhashmap),'w')
+            files.close()
         for line in lines:
                 #print line
                 path=line.split(" ")
                 if(path[1]=="notcommited\n" or path[1]=="commited\n"):
                         if(os.path.isfile(path[0])== True):
                                 #print "in file ",path[0]
-                                if not (os.path.exists(os.path.join(self.objectdir,hashmap))):
-                                        os.makedirs(os.path.join(self.objectdir,hashmap))
-                                        files=open(os.path.join(self.objectdir,hashmap,self.newhashmap),'w')
-                                        files.close()
                                 files=open(path[0],'r')
                                 content=files.readlines()
                                 files.close()
@@ -249,7 +249,7 @@ class FileController(object):
                 line_split=line.split()
                 tlist.append((line_split[0],line_split[1]))
         return tlist
-                        
+
     def getAllCommits(self):
         fp = open(self.statusfile)
         lines = fp.readlines()
