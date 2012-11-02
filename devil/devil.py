@@ -208,9 +208,16 @@ class DevilMainFrame(wx.Frame):
         obj=FileController(self.directory)
         files=open(obj.trackingfile)
         lines=files.readlines();
-        splitted = [(l[0],l[1],l[2]) for l in (y.split() for y in lines)]
+        print lines
+        #splitted = [(l[0],l[1],l[2]) for l in (y.split() for y in lines)]
         status=''
-        for (f,st,md) in splitted:
+        for line in lines:
+        #for (f,st,md) in splitted:
+            sp = line.split()
+            print sp
+            f = sp[0]
+            st = sp[1]
+            md = sp[2]
             if st != 'commited':
                 status=status+"added: " + f +"\n"
             elif not (md == str(os.path.getmtime(f))):

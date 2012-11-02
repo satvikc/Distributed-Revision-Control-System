@@ -88,6 +88,7 @@ class DevilClient(pb.Root):
                         else:
                                         print("Merged "+elem[0]+" successfully\n")
                 else:
+                        #print "Writing to elem[0]"
                         files=open(elem[0],'w')
                         content=obj.getFiler(getLastCommit(commits),elem[0])
                         files.write(content)
@@ -211,6 +212,8 @@ class FileController(object):
             split = i.split()
             name = split[0]
             status = split[1]
+            if os.path.isabs(name):
+                name = os.path.relpath(name,self.directory)
             fp.write(name + " " + status + " " + str(os.path.getmtime(name))+'\n')
         fp.close()
 
