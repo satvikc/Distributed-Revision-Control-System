@@ -76,12 +76,14 @@ class DevilClient(pb.Root):
                         dicts=merge3.devilMerge(obj.getFile(getLastCommit(common_commit),elem[0]),obj.getFile(getLastCommit(mycommits),elem[0]),obj.getFile(getLastCommit(commits),elem[0]))
                         #print dicts
                         #reactor.stop()
-                        
+                        print str(dicts)
                         #print "opening file ",elem[0]
+                        print os.getcwd()
+                        print elem[0]
                         files=open(elem[0],'w')
                         files.write(dicts['md_content'])
                         files.close()
-                        obj.add(elem[0])
+                        #obj.add(elem[0])
                         if(dicts['conflict']==1):
                                 print("Merged with conflicts in "+elem[0]+" not commiting.Please commit after manually changing")
                                 flag=1
@@ -117,6 +119,7 @@ class FileController(object):
           FileController Object
         """
         self.directory = dirc
+        os.chdir(dirc)
         self.statusfile = os.path.join(self.directory,'Devil','status.txt')
         self.userfile=os.path.join(self.directory,'Devil','username.txt')
         self.trackingfile=os.path.join(self.directory,'Devil','files.txt')
