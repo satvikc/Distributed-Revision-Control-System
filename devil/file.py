@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 #should not be there
-import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys,zlib,tempfile
+import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys,zlib,tempfile,merge3
 from optparse import OptionParser
 from utils import fileTracked,getUsername,getHashNameFromHashmap
 from contextlib import closing
@@ -164,8 +164,8 @@ class FileController(object):
             print(line)
 
 
-    def pull(self,url):
-        pass
+    def pull(self,directory):
+        self.merge(directory)
 
     def push(self,url):
         pass
@@ -180,9 +180,10 @@ class FileController(object):
                 files.write(content)
                 files.close()
 
+
     def merge(self,directory):
         commits = getCommits(directory)
-        print(commits)
+        #print(commits)
         mycommits = self.getAllCommits()
         commits_to_fetch = set(commits).difference(set(mycommits))
         fp = open(self.statusfile,'a')
@@ -196,12 +197,26 @@ class FileController(object):
             print(k)
             fp.write(k)
         fp.close()
-
-
-
-
-
-
+        parent_commit=[x for x in commits if x in set(mycommits)][-1]
+        #print (parent_commit.split()[1])
+        parent_file_list=self.__getFileList(parent_commit.split()[1])
+        my_file_list=self.__getFileList(mycommits[-1].split()[1])
+        other_file_list=self.__getFileList(commits[-1].split()[1])
+        flag=0
+        for elem in my_file_list:
+                for temp in other_file_list:
+                        if(elem==temp):
+                                dicts=merge3.devilMerge(self.__getFile(parent_commit.split()[1],elem[0]),self.__getFile(mycommits[-1].split()[1],elem[0]),self.__getFile(commits[-1].split()[1],elem[0]))
+                                files=open(elem[0],'w')
+                                files.write(dicts['md_content'])
+                                files.close()
+                                if(dicts['conflict']==0 and dicts['merged']!=0):
+                                        print("Merged "+elem[0]+"\n")
+                                else:
+                                        print("Merged with conflicts in "+elem[0]+" not commiting.Please commit after manually changing")
+                                        flag=1
+        if(flag==0):
+                self.commit('auto-merged successfull')
     # Helpers
     def __objectname(self,hashtag):
         return os.path.join(self.objectdir,hashtag)
@@ -226,6 +241,15 @@ class FileController(object):
         fp.close()
         return content
 
+    def __getFileList(self,commit_tag):
+        files=open(os.path.join(self.objectdir,commit_tag,self.newhashmap),'r')
+        lines=files.readlines()
+        tlist=[]
+        for line in lines:
+                line_split=line.split()
+                tlist.append((line_split[0],line_split[1]))
+        return tlist
+                        
     def getAllCommits(self):
         fp = open(self.statusfile)
         lines = fp.readlines()
@@ -297,6 +321,7 @@ def main():
     parser.add_option("-d", "--diff",help="Given a file name shows diff from last commit", dest="diff",action= "store")
     parser.add_option("-r", "--revert",help="revert current directory to an old commit", dest="revert",action= "store")
     parser.add_option("--change",help="overview of difference b/w two commits", dest="change",action= "store")
+    parser.add_option("-p", "--pull", help = "pull and merge commits and files", dest="pull",action= "store")
     (options, args) = parser.parse_args()
     if options.init:
         #print("Initializing repo")
@@ -323,8 +348,11 @@ def main():
         obj=FileController(os.getcwd())
         obj.diff(options.diff)
     elif options.revert:
-        obj=FileController()
+        obj=FileController(os.getcwd())
         obj.revert(options.revert)
+    elif options.pull:
+        obj=FileController(os.getcwd())
+        obj.pull(options.pull)
 
 if __name__ == "__main__":
     main()

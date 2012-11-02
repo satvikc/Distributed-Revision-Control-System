@@ -460,7 +460,24 @@ class Merge3(object):
                 
         return unc
 
-
+def devilMerge(base,mine,other):
+    m = Merge3(base, mine, other)
+    mg = list(m.merge_groups())
+    conflicts = 0
+    flag=0
+    for g in mg:
+        if g[0]=='conflict': 
+            conflicts+=1
+            pass
+        if g[0]=='a':
+            flag+=1
+    merged = ''.join(m.merge_lines(
+        start_marker='\n!!!--Conflict--!!!\n!--Your version--',
+        mid_marker='\n!--Other version--',
+        end_marker='\n!--End conflict--\n'))
+    d = {'md_content' : merged, 'conflict' : conflicts, 'merged' : flag}
+    return d
+        
 def main(argv):
     # as for diff3 and meld the syntax is "MINE BASE OTHER"
     a = open(argv[1], 'rt').readlines()
