@@ -35,11 +35,11 @@ class FileController(object):
 
         try:
                 os.makedirs(self.devil)
-        except OSError(e):
+        except OSError, e:
                 if e.errno != errno.EEXIST:
                     raise
-        username = input("Enter username:\n")
-        email = input("Enter email \n")
+        username = raw_input("Enter username:\n")
+        email = raw_input("Enter email \n")
         uname=open(self.userfile,'w')
         uname.write(username+'\n')
         uname.write(email+'\n')

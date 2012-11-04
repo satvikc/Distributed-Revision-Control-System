@@ -11,8 +11,8 @@ class LocalTests(unittest.TestCase):
     def setUp(self):
         self.tempdir = tempfile.mkdtemp()
         self.f = file.FileController(self.tempdir)
-        file.input = lambda _: randstring(6)
-        file.input = lambda _: randstring(6)
+        file.raw_input = lambda _: randstring(6)
+        file.raw_input = lambda _: randstring(6)
         self.f.start()
 
     def tearDown(self):
