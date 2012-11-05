@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/python2
 #should not be there
 import exceptions,os,shutil,hashlib,datetime,filecmp,base64,difflib,sys,zlib,tempfile,merge3
 from optparse import OptionParser
@@ -269,11 +269,6 @@ class FileController(object):
         lines = fp.readlines()
         fp.close()
         return lines
-
-    #def compress(self,commit):
-        #archivename = tempfile.mkstemp(suffix='.zip')
-        #zipdir(os.path.join(self.objectdir,commit),archivename)
-        #return archivename
 
     def compressAndSend(self,commit): #warning doesnot handle empty directory
         archivename = self.compressAll(commit)

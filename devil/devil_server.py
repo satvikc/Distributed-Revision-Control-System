@@ -7,9 +7,14 @@ class DevilServer(pb.Root):
         f = FileController(directory)
         return f.getAllCommits()
 
-    def remote_getCommitsContent(self,directory,commit):
-        f = FileController(d)
-        return f.compressAndSend(c)
+    def remote_getCommitContent(self,directory,commit):
+        f = FileController(directory)
+        return f.compressAndSend(commit)
+
+    def remote_getCommitsContent(self,directory,commits):
+        for commit in commits:
+
+        
 
 
 if __name__ == '__main__':
