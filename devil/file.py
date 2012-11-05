@@ -277,12 +277,12 @@ class FileController(object):
     def compressAll(self,commits):
         tempdir = tempfile.mkdtemp()
         temp = tempfile.gettempdir()
-        commitdir = os.path.join(tempdir,os.path.basename(self.commitdir))
+        commitdir = os.path.join(tempdir,os.path.basename(self.commitfiles))
         try:
             os.mkdir(commitdir)
         except:
             pass
-        archivename = os.path.join(tempdir,commit+'.zip')
+        (_,archivename) = tempfile.mkstemp(suffix='.zip')
         for i in commits:
             filenames = self.getFileName(i)
             shutil.copy2(os.path.join(self.objectdir,i),tempdir)
@@ -290,13 +290,14 @@ class FileController(object):
                 h = self.getFileLoc(i,fn)
                 floc = os.path.join(self.commitfiles,h)
                 shutil.copy2(floc, commitdir)
-
-        archivename = tempfile.mkstemp(suffix='.zip')
+        print tempdir
+        print archivename
         zipdir(tempdir,archivename)
+        return archivename
 
 
-    def uncompressAndWrite(self,archivename,content):
-        archivename = tempfile.mkstemp(suffix='.zip')
+    def uncompressAndWrite(self,content):
+        (_,archivename) = tempfile.mkstemp(suffix='.zip')
         fp = open(archivename,'wb')
         fp.write(content)
         fp.close()
