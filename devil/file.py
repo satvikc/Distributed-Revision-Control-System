@@ -290,8 +290,6 @@ class FileController(object):
                 h = self.getFileLoc(i,fn)
                 floc = os.path.join(self.commitfiles,h)
                 shutil.copy2(floc, commitdir)
-        print tempdir
-        print archivename
         zipdir(tempdir,archivename)
         return archivename
 
@@ -302,12 +300,6 @@ class FileController(object):
         fp.write(content)
         fp.close()
         unzipdir(self.objectdir,archivename)
-
-
-
-
-
-
 
 # Merge helpers. Remove them when you implement over network.
 

@@ -10,13 +10,15 @@ import shutil
 class LocalTests(unittest.TestCase):
     def setUp(self):
         self.tempdir = tempfile.mkdtemp()
+        self.tempdir2 = tempfile.mkdtemp()
         self.f = file.FileController(self.tempdir)
         file.raw_input = lambda _: randstring(6)
         file.raw_input = lambda _: randstring(6)
         self.f.start()
+        self.g = None
 
     def tearDown(self):
-        #shutil.rmtree(self.tempdir)
+        shutil.rmtree(self.tempdir)
         pass
 
     def test_start(self):
@@ -56,10 +58,10 @@ class LocalTests(unittest.TestCase):
         fp.close()
         committag = lns[0].split()[1]
         # check objectdir 
-        cdir = os.path.join(self.f.objectdir,committag)
+        cdir = os.path.join(self.f.commitfiles)
         self.assertTrue(os.path.isdir(cdir))
         # check hashmapfile 
-        hfile = os.path.join(self.f.objectdir,committag,self.f.newhashmap)
+        hfile = os.path.join(self.f.objectdir,committag)
         self.assertTrue(os.path.isfile(hfile))
         # check all files copied 
 
@@ -69,6 +71,18 @@ class LocalTests(unittest.TestCase):
         for line in lines:
             sp = line.split()
             self.assertTrue(os.path.isfile(os.path.join(cdir,sp[1])))
+
+    def test_merge(self):
+        file.raw_input = lambda _: randstring(6)
+        file.raw_input = lambda _: randstring(6)
+        self.g =  file.FileController(self.tempdir2)
+        self.g.start()
+        self.commit()
+        self.g.merge(self.tempdir)
+        pass
+
+
+    
         
 
 
