@@ -189,7 +189,8 @@ class FileController(object):
         for k in commits_to_fetch:
             fp.write(k)
         fp.close()
-        cont = getCommitsContent(directory,commits_to_fetch)
+        c_to_fetch = [i.split()[1] for i in commits_to_fetch]
+        cont = getCommitsContent(directory,c_to_fetch)
         self.uncompressAndWrite(cont)
         parent_commit=[x for x in commits if x in set(mycommits)][-1]
         #print (parent_commit.split()[1]) 
@@ -304,7 +305,7 @@ def getCommits(d):
 
 def getCommitsContent(d,c):
     f = FileController(d)
-    return f.compressAndSend([c])
+    return f.compressAndSend(c)
 
 def zipdir(basedir, archivename):
     assert os.path.isdir(basedir)
@@ -317,6 +318,7 @@ def zipdir(basedir, archivename):
                 z.write(absfn, zfn)
 
 def unzipdir(targetdir, archivename):
+    print(targetdir)
     assert os.path.isdir(targetdir)
     assert os.path.isfile(archivename)
     zip_file = ZipFile(archivename, 'r')

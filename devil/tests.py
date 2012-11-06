@@ -6,6 +6,7 @@ import random
 import string
 import file 
 import shutil
+import filecmp
 
 class LocalTests(unittest.TestCase):
     def setUp(self):
@@ -79,7 +80,10 @@ class LocalTests(unittest.TestCase):
         self.g.start()
         self.commit()
         self.g.merge(self.tempdir)
-        pass
+        compareObj = filecmp.dircmp(self.f.commitfiles,self.g.commitfiles)
+        assertTrue(compareObj.left_only == [])
+        assertTrue(compareObj.right_only == [])
+        shutil.rmtree(self.tempdir2)
 
 
     
