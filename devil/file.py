@@ -187,17 +187,12 @@ class FileController(object):
         commits_to_fetch = set(commits).difference(set(mycommits))
         fp = open(self.statusfile,'a')
         for k in commits_to_fetch:
-            i = k.split()
-            committag = i[1]
-            print(committag)
-            cont = getCommitsContent(directory,committag)
-            self.uncompressAndWrite(committag,cont)
-            # add to status file
-            print(k)
             fp.write(k)
         fp.close()
+        cont = getCommitsContent(directory,commits_to_fetch)
+        self.uncompressAndWrite(cont)
         parent_commit=[x for x in commits if x in set(mycommits)][-1]
-        #print (parent_commit.split()[1])
+        #print (parent_commit.split()[1]) 
         parent_file_list=self.getFileList(parent_commit.split()[1])
         my_file_list=self.getFileList(mycommits[-1].split()[1])
         other_file_list=self.getFileList(commits[-1].split()[1])
@@ -309,7 +304,7 @@ def getCommits(d):
 
 def getCommitsContent(d,c):
     f = FileController(d)
-    return f.compressAndSendAll([c])
+    return f.compressAndSend([c])
 
 def zipdir(basedir, archivename):
     assert os.path.isdir(basedir)
