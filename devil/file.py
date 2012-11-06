@@ -193,7 +193,10 @@ class FileController(object):
         c_to_fetch = [i.split()[1] for i in commits_to_fetch]
         cont = getCommitsContent(directory,c_to_fetch)
         self.uncompressAndWrite(cont)
-        parent_commit=[x for x in commits if x in set(mycommits)][-1]
+        try:
+            parent_commit=[x for x in commits if x in set(mycommits)][-1]
+        except:
+            parent_commit = "commit none"
         #print (parent_commit.split()[1]) 
         parent_file_list=self.getFileList(parent_commit.split()[1])
         my_file_list=self.getFileList(mycommits[-1].split()[1])
@@ -221,10 +224,13 @@ class FileController(object):
     def getFile(self,committag,filename):
         hashmap = os.path.join(self.objectdir,committag)
         h = getHashNameFromHashmap(hashmap,filename)
-        fp = open(os.path.join(self.objectdir,h))
-        content = fp.readlines()
-        fp.close()
-        return content
+        try:
+            fp = open(os.path.join(self.objectdir,h),'r')
+            content = fp.readlines()
+            fp.close()
+            return content
+        except:
+            return ''
 
     def getFileName(self,committag):
         fp = open(os.path.join(self.objectdir,committag))
@@ -250,13 +256,17 @@ class FileController(object):
         return content
 
     def getFileList(self,commit_tag):
-        files=open(os.path.join(self.objectdir,commit_tag,self.newhashmap),'r')
-        lines=files.readlines()
-        tlist=[]
-        for line in lines:
+        try:
+            files=open(os.path.join(self.objectdir,commit_tag),'r')
+            lines=files.readlines()
+            tlist=[]
+            for line in lines:
                 line_split=line.split()
                 tlist.append((line_split[0],line_split[1]))
-        return tlist
+            files.close()
+            return tlist
+        except:
+            return []
 
     def getAllCommits(self):
         fp = open(self.statusfile)
