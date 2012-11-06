@@ -6,7 +6,7 @@ from file import FileController
 class DevilClient(pb.Root):
    def connect(self):
         clientfactory = pb.PBClientFactory()
-        reactor.connectTCP("localhost", 8789, clientfactory)
+        reactor.connectTCP("localhost", 8788, clientfactory)
         d = clientfactory.getRootObject()
         d.addCallback(self.got_connected)
 
@@ -24,12 +24,12 @@ class DevilClient(pb.Root):
         for k in commits_to_fetch:
             fp.write(k)
         fp.close()
-        d=commits.callRemote("function1",obj.directory)
+        d=commits.callRemote("getCommitContent",obj.directory,commits_to_fetch)
         d.addCallBack(self.gotCommitsContent,commits,mycommits)
 
    def gotCommitsContent(self,cont,commits,mycommits):
         obj=FileController(os.getcwd())
-        obj.function2(cont)
+        obj.uncompressAndWrite(cont)
         parent_commit=[x for x in commits if x in set(mycommits)][-1]
         #print (parent_commit.split()[1])
         parent_file_list=obj.getFileList(parent_commit.split()[1])
