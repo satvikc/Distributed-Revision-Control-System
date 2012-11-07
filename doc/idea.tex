@@ -41,7 +41,7 @@ changes, each peer has a working copy of the codebase. DVCS usually perform
 syncronizations by exchanging patches between peers.
 
 In this project we will be implementing a distributed version control
-system with basic features like commit, push patch, pull patch, view history,
+system with basic features like commit, push commits, pull commits, view history,
 merging of code files, reverting changes etc.
 \end{abstract}
 \section{Introduction}
@@ -152,9 +152,9 @@ avoiding any overhead due to network latency by being asynchronous.
 \centering
 \begin{tikzpicture}[ scale=0.6,transform shape]
 \tikzstyle{every node}=[circle,thick,fill=gray!40,inner sep=8]
-\node (a) at (0,0) {A} ;
+\node (a) at (0,0) {C} ;
 \node (b) at (5,-3) {B};
-\node (c) at (5,3) {C};
+\node (c) at (5,3) {A};
 \node (d) at (10,0) {D};
 \draw [->] (a) -- (b);
 \draw [->] (a) -- (c);
@@ -176,13 +176,16 @@ This will provide the actual interface which user will be able to use and this
 will coordinate the working of the other two components.
 It consists of
 \begin{itemize}
-\item Defining a command line interface for linux machines and if possible a
-  gui interface may be considered.
-\item Defining the ususal commands like commit, push changes, pull changes
-  etc.
-\item This will act like a bridge between the networking subsystem and code
-  revision system and will combine the features of both to provide an end to
-  end distributed version control system.
+\item It contains command line interface to perform all the actions. We
+  haven't tested it on a windows machine but the code should be portable.
+\item An intuitive GUI interface is important to have a better user
+  experience, but due to lack of time we could not implement it.
+\item We have defined the usual commands like initiate repository, add files,
+  pull commits, see log, see the status, revert changes, clone repository,
+  push commits etc.
+\item This acts like a bridge between the networking subsystem and code
+  revision system. It uses both the interfaces to provide an end to end code
+  revision system.
 \end{itemize}
 
 \begin{thebibliography}{99}
