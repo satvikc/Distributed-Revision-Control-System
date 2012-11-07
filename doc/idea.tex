@@ -363,6 +363,15 @@ Date: 2012-11-01
 
 
 \end{lstlisting}
+\item \emph{Revert} It takes the current state of the user's directory to the state of the commit with the commit tag specified. It is used in cases when you want to go to a safe state after doing many wrong changes in the current directory.
+\begin{lstlisting}
+$ ./file.py -r 16d92f8e981a69bdca0a3abc1f40359a0331f7bf8ccb9022fc6
+\end{lstlisting}
+\item \emph{Clone} It clones an ongoing project from the network into its workspace, getting all its files and commits in a single go. Basically it could be used by a new user to begin with the project.
+\begin{lstlisting}
+$ ./file.py --clone 127.24.1.166:5000/sub
+\end{lstlisting}
+
 \item \emph{Pull} It will get the last commit from a different user over the network and for each file in the commit it will find out the file in the current directory of the user and the parent file (the file from which both files have diverged) and merge them using our 3-way merge algorithm as defined earlier in the Code Revision System section, and after successfully merging it creates a new commit with new merged files in the current directory.
 \begin{lstlisting}
 $ ./file.py --pull 127.24.1.166:5000/sub
@@ -376,7 +385,8 @@ $ ./file.py --push 127.24.1.166:5000/sub
 
 \end{lstlisting}
 \end{itemize}
-\section{Conclusion and Future Work}
+\section{Future Work}
+We could extend our work by implementing concept of branches, in which a user could be able to keep multiple branches of an on going project at the same time. Also, we can create a GUI(Graphical User Interface) for this system to make it more user friendly
 \begin{thebibliography}{99}
 \bibitem{wiki}
 Distributed Revision Control
