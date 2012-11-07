@@ -2,6 +2,17 @@
 
 \usepackage{tikz}
 \usetikzlibrary{backgrounds}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\definecolor{lightgrey}{gray}{0.8}
+\lstset{
+    frame=lrbt
+  , backgroundcolor=\color{lightgrey}
+  , frame=shadowbox
+  , rulesepcolor=\color{gray}
+}
+
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -45,26 +56,10 @@ system with basic features like commit, push commits, pull commits, view history
 merging of code files, reverting changes etc.
 \end{abstract}
 \section{Introduction}
-Talk about use of revision control systems.
-asd
-sayas
-d
-sa
-ds
-ad
-as
-d
-as
-d
-as
-
-add
-
-asda
-
-addsd
-a
-add
+Version control is just a way to track our files over time and share them
+with other collaborators. This allows us to go back to older versions when
+something goes wrong, see what changed when and why, collaborate on a single
+piece of work with a bunch of people.
 
 \begin{wrapfigure}[14]{r}{9cm}
 \centering
@@ -147,6 +142,7 @@ place. We can also add the error callback which is invocated when an error is
 raised at the server side. Thus the remote calls add some bit of transparency
 avoiding any overhead due to network latency by being asynchronous.
 
+
 \subsection{Code Revision System}
 \begin{wrapfigure}[8]{r}{9cm}
 \centering
@@ -181,7 +177,7 @@ There are several reasons which require us to use an automated merge tool for a 
 There are many merging startegies like 2-Way merge, 3-Way merge, patch commutation of Darcs,  two-way merge with history of Codeville etc. \cite{WIKIMERGE}.
 We have used 3-Way merge in our project, because it requires a parent file to merge two files and the revision control systems mostly gurantees existense of such a file.
 
-Consider, two files \emph{A} and \emph{B} with \emph{C} as their parent file (the file from which both files have diverged). Our merge algorithm analyses the difference between files \emph{A} and \emph{B} considering itno account the differences of it from their parent \emph{C} to produce the automatically-merged file \emph{D}. 
+Consider, two files \emph{A} and \emph{B} with \emph{C} as their parent file (the file from which both files have diverged). Our merge algorithm analyses the difference between files \emph{A} and \emph{B} considering itno account the differences of it from their parent \emph{C} to produce the automatically-merged file \emph{D}.
 
 \subsection{User Interface/Controller}
 This will provide the actual interface which user will be able to use and this
@@ -199,6 +195,12 @@ It consists of
   revision system. It uses both the interfaces to provide an end to end code
   revision system.
 \end{itemize}
+
+\begin{lstlisting}
+public void here() {
+    goes().the().code()
+}
+\end{lstlisting}
 
 \begin{thebibliography}{99}
 \bibitem{wiki}
