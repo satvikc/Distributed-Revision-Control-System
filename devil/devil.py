@@ -20,7 +20,8 @@ class DevilMainFrame(wx.Frame):
         wx.Frame.__init__(self, *args, **kwds)
         self.notebook_1 = wx.Notebook(self, -1, style=0)
         self.notebook_1_pane_1 = wx.Panel(self.notebook_1, -1)
-        self.label_1 = wx.StaticText(self.notebook_1_pane_1, -1, "Init the version control")
+        self.text_ctrl_6 = wx.TextCtrl(self.notebook_1_pane_1, -1, "Username")
+        self.text_ctrl_7 = wx.TextCtrl(self.notebook_1_pane_1, -1, "email")
         self.button_13 = wx.Button(self.notebook_1_pane_1, -1, "Initiate Repo")
         self.label_4 = wx.StaticText(self.notebook_1_pane_1, -1, "Add File or Directory")
         self.button_1 = wx.Button(self.notebook_1_pane_1, -1, "Add")
@@ -48,8 +49,6 @@ class DevilMainFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.OnPush, self.button_9)
         self.Bind(wx.EVT_BUTTON, self.OnStatus, self.button_11)
         self.Bind(wx.EVT_BUTTON, self.OnLog, self.button_12)
-        self.UpdateServerList()
-        self.UpdateRevertList()
         # end wxGlade
 
     def __set_properties(self):
@@ -67,7 +66,10 @@ class DevilMainFrame(wx.Frame):
         sizer_3 = wx.BoxSizer(wx.VERTICAL)
         grid_sizer_2 = wx.FlexGridSizer(1, 2, 1, 1)
         grid_sizer_1 = wx.FlexGridSizer(7, 2, 1, 1)
-        grid_sizer_1.Add(self.label_1, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_3 = wx.GridSizer(1, 2, 0, 0)
+        grid_sizer_3.Add(self.text_ctrl_6, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_3.Add(self.text_ctrl_7, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_1.Add(grid_sizer_3, 1, wx.EXPAND, 0)
         grid_sizer_1.Add(self.button_13, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_1.Add(self.label_4, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_1.Add(self.button_1, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
@@ -117,7 +119,10 @@ class DevilMainFrame(wx.Frame):
 
     def OnInit(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         """ Init the Repo on current directory """
-        print "Init called"
+        username = self.text_ctrl_6.GetValue()
+        email = self.text_ctrl_7.GetValue()
+
+        print "Init called ", username, email
         pass 
 
     def OnAdd(self, event):  # wxGlade: DevilMainFrame.<event_handler>
@@ -174,21 +179,22 @@ class DevilMainFrame(wx.Frame):
 
     def UpdateServerList(self):  
         """ get list of servers """
-        cp = ConfigParser.RawConfigParser()
-        fp = FileController(self.directory)
-        cp.read(self.remotefile)
-        #cp.read('remotes.txt')
-        nodes = cp.items("Remotes")
-        servers = []
-        for (n,l) in nodes:
-            self.remote[n] = l 
-            servers = servers + [n]
-        print nodes
-        self.combo_box_5.Clear()
-        self.combo_box_5.AppendItems(servers)
-        self.combo_box_6.Clear()
-        self.combo_box_6.AppendItems(servers)
-        wx.Yield()
+        try:
+            cp = ConfigParser.RawConfigParser()
+            fp = FileController(self.directory)
+            cp.read(self.remotefile)
+            nodes = cp.items("Remotes")
+            servers = []
+            for (n,l) in nodes:
+                self.remote[n] = l 
+                servers = servers + [n]
+            self.combo_box_5.Clear()
+            self.combo_box_5.AppendItems(servers)
+            self.combo_box_6.Clear()
+            self.combo_box_6.AppendItems(servers)
+            wx.Yield()
+        except:
+            pass
 
 
 # end of class DevilMainFrame
