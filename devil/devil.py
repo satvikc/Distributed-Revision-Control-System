@@ -4,8 +4,10 @@
 
 import wx
 import os
-import ConfigParser
 from file import FileController
+from file import merge3
+from file import getLastCommit
+import ConfigParser
 
 # begin wxGlade: extracode
 # end wxGlade
@@ -112,7 +114,9 @@ class DevilMainFrame(wx.Frame):
     def OnCommit(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         msg = self.text_ctrl_2.GetValue()
         """ Commit code here using commit message as msg"""
-        print msg
+        obj=FileController(self.directory)
+        obj.commit(msg)
+        #print msg
 
         # Update commit list in dialog box 
         self.UpdateRevertList()
@@ -120,10 +124,11 @@ class DevilMainFrame(wx.Frame):
 
     def OnInit(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         """ Init the Repo on current directory """
+        obj=FileController(self.directory)
+        #print "Init called"
         username = self.text_ctrl_6.GetValue()
         email = self.text_ctrl_7.GetValue()
-
-        print "Init called ", username, email
+        obj.start2(username,email)
         self.sb.SetStatusText("Repo Initialized")
 
 
@@ -137,38 +142,60 @@ class DevilMainFrame(wx.Frame):
             self.label_4.SetLabel(filename)
             wx.Yield()
             """ Add Code Here using """
-            print filename
+            obj=FileController(self.directory)
+            obj.add(filename)
+            #print filename
         dlg.Destroy()
 
     def OnRevert(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         commit = self.combo_box_4.GetValue()
         
         """ Revert to commit """
-        print commit 
+        obj=FileController(self.directory)
+        obj.revert(commit)
+        #print commit 
 
     def OnPull(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         server = self.combo_box_5.GetValue()
-        
+        loc=self.remote[server]
         """ Pull """
-
-        print server 
+        obj=FileController(self.directory)
+        obj.pull(loc)
+        #print server 
 
     def OnPush(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         server = self.combo_box_6.GetValue()
-
+        loc=self.remote[server]
         """ Push """
-        print server 
+        obj=FileController(self.directory)
+        obj.push(loc)
+        #print server 
 
     def OnStatus(self, event):  # wxGlade: DevilMainFrame.<event_handler>
 
         """ Status code here """ 
-        status = "get status from file"
+        obj=FileController(self.directory)
+        files=open(obj.trackingfile)
+        lines=files.readlines();
+        splitted = [(l[0],l[1],l[2]) for l in (y.split() for y in lines)]
+        status=''
+        for (f,st,md) in splitted:
+            if st != 'commited':
+                status=status+"added: " + f +"\n"
+            elif not (md == str(os.path.getmtime(f))):
+                status=status+"modified: " + f +"\n"
+        #status = "get status from file"
 
         self.text_ctrl_5.SetValue(status)
 
     def OnLog(self, event):  # wxGlade: DevilMainFrame.<event_handler>
-
-        status = "get log  from file"
+        obj=FileController(self.directory)
+        status = ''
+        files=open(obj.statusfile)
+        lines=files.readlines();
+        for line in lines:
+            line = line.split()
+            status=status+"Commit: " + line[1] + "\n"  + "Author: " + line[2] + "\n" + "Email: " + line[3] + "\n" + "Date: " + line[4] + "\n\n"
 
         self.text_ctrl_5.SetValue(status)
 
