@@ -38,6 +38,7 @@ class DevilMainFrame(wx.Frame):
         self.button_12 = wx.Button(self.notebook_1_pane_2, -1, "Log")
         self.text_ctrl_5 = wx.TextCtrl(self.notebook_1_pane_2, -1, "", style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_LINEWRAP)
 
+        self.sb = self.CreateStatusBar()
         self.__set_properties()
         self.__do_layout()
 
@@ -123,7 +124,8 @@ class DevilMainFrame(wx.Frame):
         email = self.text_ctrl_7.GetValue()
 
         print "Init called ", username, email
-        pass 
+        self.sb.SetStatusText("Repo Initialized")
+
 
     def OnAdd(self, event):  # wxGlade: DevilMainFrame.<event_handler>
         """ Open a file"""
