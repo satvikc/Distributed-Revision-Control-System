@@ -55,7 +55,7 @@ class DevilMainFrame(wx.Frame):
         # begin wxGlade: DevilMainFrame.__set_properties
         self.SetTitle("Devil")
         _icon = wx.EmptyIcon()
-        _icon.CopyFromBitmap(wx.Bitmap("/home/satvik/acads/CS632/project/devil/devil.jpg", wx.BITMAP_TYPE_ANY))
+        _icon.CopyFromBitmap(wx.Bitmap(os.path.join(os.getcwd(),"devil.jpg"), wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
         self.SetSize((883, 983))
         # end wxGlade
