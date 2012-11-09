@@ -25,7 +25,8 @@ class DevilClientPush(pb.Root):
         reactor.stop()
 
 class DevilClient(pb.Root):
-   def connect(self,directory,ip,port,sdirectory):
+   def connect(self,directory,ip,port,sdirectory,stop):
+        self.stop = stop
         self.directory=directory
         clientfactory = pb.PBClientFactory()
         reactor.connectTCP(ip, port, clientfactory)
@@ -52,7 +53,7 @@ class DevilClient(pb.Root):
         fp.close()
         c_to_fetch = [i.split()[1] for i in commits_to_fetch]
         #print c_to_fetch
-        if c_to_fetch == []:
+        if c_to_fetch == [] and self.stop:
                 reactor.stop()
         else:
                 d=self.result.callRemote("getCommitContent",sdirectory,c_to_fetch)
@@ -76,10 +77,10 @@ class DevilClient(pb.Root):
                         dicts=merge3.devilMerge(obj.getFile(getLastCommit(common_commit),elem[0]),obj.getFile(getLastCommit(mycommits),elem[0]),obj.getFile(getLastCommit(commits),elem[0]))
                         #print dicts
                         #reactor.stop()
-                        print str(dicts)
+                        #print str(dicts)
                         #print "opening file ",elem[0]
-                        print os.getcwd()
-                        print elem[0]
+                        #print os.getcwd()
+                        #print elem[0]
                         files=open(elem[0],'w')
                         files.write(dicts['md_content'])
                         files.close()
@@ -101,7 +102,8 @@ class DevilClient(pb.Root):
         if(flag==0):
                 obj.commit('auto-merged successfull')
         print "Pull Successfull\n"
-        reactor.stop()
+        if self.stop:
+            reactor.stop()
 
 
 
@@ -208,7 +210,7 @@ class FileController(object):
     def update_modify_time(self):
         fp = open(self.trackingfile,'r')
         cont = fp.readlines()
-        print str(cont)
+        #print str(cont)
         fp.close()
         fp = open(self.trackingfile,'w')
         for i in cont:
@@ -227,7 +229,7 @@ class FileController(object):
         hashmap=hashlib.sha224(base64.b64encode((username+email+dateandtime).encode('ascii'))).hexdigest()
         files=open(self.trackingfile,'r')
         lines=files.readlines()
-        print "LINES >>",lines
+        #print "LINES >>",lines
         files.close()
         #os.makedirs(os.path.abspath('Devil')+'/object'+'/'+hashmap)
         if not (os.path.exists(os.path.join(self.commitfiles))):
@@ -328,12 +330,12 @@ class FileController(object):
             print(line[:-1])
 
 
-    def pull(self,istring):
+    def pull(self,istring,close=True):
         ip=istring.split(":")[0]
         port=int(istring.split(":")[1].split("/")[0])
         sdirectory=istring.split(":")[1][4:]
         #print ip,str(port),sdirectory,"\n"
-        DevilClient().connect(self.directory,ip,port,sdirectory)
+        DevilClient().connect(self.directory,ip,port,sdirectory,close)
         
 
     def push(self,istring):
@@ -571,6 +573,7 @@ def main():
     elif options.clone:
         sdirectory=(options.clone).split(":")[1][4:]
         temp=os.path.join(os.getcwd(),os.path.basename(sdirectory))
+        os.makedirs(temp)
         obj=FileController(temp)
         obj.start()
         os.chdir(temp)

@@ -16,7 +16,7 @@ class DevilServer(pb.Root):
         print directory
         print "received push request"
         f = FileController(directory)
-        f.pull(loc)
+        f.pull(loc,False)
         print "pull completed"
         return 1
 

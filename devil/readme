@@ -10,3 +10,5 @@ $ To push
 $ ./file.py --push [your]:[your port][remote ip]:[remote post][full path of remote directory]
 
 Rest of the commnads are described in the document. 
+
+To start server use python devil_server.py
