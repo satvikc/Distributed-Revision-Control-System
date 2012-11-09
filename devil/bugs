@@ -1,0 +1,21 @@
+1. diff not working 
+2. clone should create a newdirectory inside the current directory with the same name.
+3. clone is not creating the files in the directory.
+
+4. revert is not working after cloning. 
+5. Commit message in log.
+6. files not created in pull.
+
+7. push not working.
+
+8. pull is not printing any messages. 
+  Merged 
+  Merge conflict in xyz 
+
+Enhancements:
+
+1. Auto pull the commits.
+2. Merging a commit to the current status of directory.
+
+
+
