@@ -37,6 +37,7 @@ class DevilMainFrame(wx.Frame):
         self.button_7 = wx.Button(self.notebook_1_pane_1, -1, "Revert")
         self.combo_box_5 = wx.ComboBox(self.notebook_1_pane_1, -1, choices=[], style=wx.CB_DROPDOWN | wx.CB_DROPDOWN | wx.CB_READONLY)
         self.button_8 = wx.Button(self.notebook_1_pane_1, -1, "Pull")
+        self.text_ctrl_3 = wx.TextCtrl(self.notebook_1_pane_1, -1, "localhost:7000")
         self.combo_box_6 = wx.ComboBox(self.notebook_1_pane_1, -1, choices=[], style=wx.CB_DROPDOWN | wx.CB_DROPDOWN | wx.CB_READONLY)
         self.button_9 = wx.Button(self.notebook_1_pane_1, -1, "Push")
         self.notebook_1_pane_2 = wx.Panel(self.notebook_1, -1)
@@ -45,7 +46,7 @@ class DevilMainFrame(wx.Frame):
         self.text_ctrl_5 = wx.TextCtrl(self.notebook_1_pane_2, -1, "", style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_LINEWRAP)
         self.notebook_1_pane_3 = wx.Panel(self.notebook_1, -1)
         self.button_2 = wx.Button(self.notebook_1_pane_3, -1, "save")
-        self.text_ctrl_1 = wx.TextCtrl(self.notebook_1_pane_3, -1, remotecontent, style=wx.TE_MULTILINE | wx.TE_LINEWRAP)
+        self.text_ctrl_1 = wx.TextCtrl(self.notebook_1_pane_3, -1, "", style=wx.TE_MULTILINE | wx.TE_LINEWRAP)
 
         self.sb = self.CreateStatusBar()
 
@@ -71,7 +72,7 @@ class DevilMainFrame(wx.Frame):
         _icon = wx.EmptyIcon()
         _icon.CopyFromBitmap(wx.Bitmap("/home/satvik/acads/CS632/project/devil/devil.jpg", wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
-        self.SetSize((741, 859))
+        self.SetSize((944, 783))
         # end wxGlade
 
     def __do_layout(self):
@@ -81,6 +82,7 @@ class DevilMainFrame(wx.Frame):
         sizer_3 = wx.BoxSizer(wx.VERTICAL)
         grid_sizer_2 = wx.FlexGridSizer(1, 2, 1, 1)
         grid_sizer_1 = wx.FlexGridSizer(7, 2, 1, 1)
+        grid_sizer_4 = wx.GridSizer(1, 2, 0, 0)
         grid_sizer_3 = wx.GridSizer(1, 2, 0, 0)
         grid_sizer_3.Add(self.text_ctrl_6, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_3.Add(self.text_ctrl_7, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
@@ -94,7 +96,9 @@ class DevilMainFrame(wx.Frame):
         grid_sizer_1.Add(self.button_7, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_1.Add(self.combo_box_5, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_1.Add(self.button_8, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
-        grid_sizer_1.Add(self.combo_box_6, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_4.Add(self.text_ctrl_3, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_4.Add(self.combo_box_6, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_1.Add(grid_sizer_4, 1, wx.EXPAND, 0)
         grid_sizer_1.Add(self.button_9, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         self.notebook_1_pane_1.SetSizer(grid_sizer_1)
         grid_sizer_1.AddGrowableRow(1)
@@ -185,6 +189,7 @@ class DevilMainFrame(wx.Frame):
         #print server 
 
     def OnPush(self, event):  # wxGlade: DevilMainFrame.<event_handler>
+        myloc = self.text_ctrl_3.GetValue()
         server = self.combo_box_6.GetValue()
         loc=self.remote[server]
         """ Push """

@@ -303,7 +303,8 @@ It consists of
 \item It contains command line interface to perform all the actions. We
   haven't tested it on a windows machine but the code should be portable.
 \item An intuitive GUI interface is important to have a better user
-  experience, but due to lack of time we could not implement it.
+  experience. We have provided a GUI, but it is not as flexible as command
+  line interface is.
 \item We have defined the usual commands like initiate repository, add files,
   pull commits, see log, see the status, revert changes, clone repository,
   push commits etc.
@@ -386,7 +387,12 @@ $ ./file.py --push 127.24.1.166:5000/sub
 \end{lstlisting}
 \end{itemize}
 \section{Future Work}
-We could extend our work by implementing concept of branches, in which a user could be able to keep multiple branches of an on going project at the same time. Also, we can create a GUI(Graphical User Interface) for this system to make it more user friendly
+We could extend our work by implementing concept of branches, in which a user
+could be able to keep multiple branches of an on going project at the same
+time. We have created a GUI for the system but it is not very flexible. The
+aim could be making a more intuitive and flexible UI. The other work can be to
+auto-fetch commits on regular interval from the remotes defined thus you can
+merge changes of others even if you are offline.
 \begin{thebibliography}{99}
 \bibitem{wiki}
 Distributed Revision Control
