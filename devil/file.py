@@ -258,12 +258,14 @@ class FileController(object):
     def log(self):
         files=open(self.statusfile)
         lines=files.readlines();
+        files.close()
         for line in lines:
             line = line.split()
             print("Commit: " + line[1])
             print("Author: " + line[2])
             print("Email: " + line[3])
             print("Date: " + line[4])
+            print("Msg: " + line[6])
             print '\n'
 
 
