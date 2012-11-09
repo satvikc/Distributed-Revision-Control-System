@@ -17,9 +17,13 @@ class DevilMainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         self.directory = os.getcwd()
         fp = FileController(self.directory)
-        y = open(fp.remotefile)
-        remotecontent = y.read()
-        y.close()
+        try:
+            y = open(fp.remotefile)
+            remotecontent = y.read()
+            y.close()
+        except:
+            remotecontent = ""
+            print "No remote file"
         self.remote = {}
         # begin wxGlade: DevilMainFrame.__init__
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
@@ -240,12 +244,16 @@ class DevilMainFrame(wx.Frame):
     def UpdateRevertList(self):
         """ Get all commits in the commit list """
         fp = FileController(self.directory)
-        files=open(fp.statusfile)
-        lines=files.readlines();
-        commits = [l[1] for l in (m.split() for m in lines)]
-        self.combo_box_4.Clear()
-        self.combo_box_4.AppendItems(commits)
-        wx.Yield()
+        try:
+            files=open(fp.statusfile)
+            lines=files.readlines();
+            commits = [l[1] for l in (m.split() for m in lines)]
+            self.combo_box_4.Clear()
+            self.combo_box_4.AppendItems(commits)
+            wx.Yield()
+        except:
+            print "No status file"
+
 
     def UpdateServerList(self):  
         """ get list of servers """
