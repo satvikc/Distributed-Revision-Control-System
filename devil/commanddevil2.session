@@ -1,365 +1,0 @@
-Script started on Sun 11 Nov 2012 10:15:18 PM IST
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil]1;..project/devil[0m[27m[24m[J[01;31m➜ [01;32m [36mdevil [01;34mgit:([31mmaster[00m)[01;34m [00m[Klls
-]2;ls --color=tty]1;lsbugs                   devil_server.py  merge3.pyc            [0m[01;34mtest1[0m
-commanddevil           exceptions.py    _patiencediff_py.py   [01;34mtest2[0m
-commanddevil2          exceptions.pyc   _patiencediff_py.pyc  tests.py
-commanddevil2.session  [01;32mfile.py[0m          [01;34m__pycache__[0m           utils.py
-commanddevil2.timing   file.pyc         readme                utils.pyc
-devil_client.py        gui.wxg          [01;32mscript.sh[0m
-devil.jpg              __init__.py      script.tar.gz
-[01;32mdevil.py[0m               merge3.py        session
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil]1;..project/devil[0m[27m[24m[J[01;31m➜ [01;32m [36mdevil [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccd test
-[J[1;31mtest1[0m/  [J[1;31mtest2[0m/[J[A[0m[27m[24m[22Ccd test[K1
-[J]2;cd test1]1;cd[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Klls
-]2;ls --color=tty]1;lsa.txt
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccata   a.txt[1m [0m[0m 
-]2;cat a.txt]1;cat1
-2
-3
-4
-5
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc -i
-]2;devilc -i]1;devilcEnter username:
-satvikc
-Enter email 
-satvikc@
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc --help
-]2;devilc --help]1;devilcUsage: devilc [options] arg
-
-Options:
-  -h, --help            show this help message and exit
-  -i, --init            Initialize the repo
-  -a ADD, --add=ADD     add files to tracking system
-  -c COMMIT, --commit=COMMIT
-                        commit the required changes
-  -s, --status          all not commited files
-  -l, --log             complete list of commits
-  -d DIFF, --diff=DIFF  Given a file name shows diff from last commit
-  -r REVERT, --revert=REVERT
-                        revert current directory to an old commit
-  --change=CHANGE       overview of difference b/w two commits
-  -p PULL, --pull=PULL  pull and merge commits and files
-  --push=PUSH           pushes the commits to the ipport provided
-  --clone=CLONE         clones a target directory into its folder
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc -a a.txt[1m [0m[0m 
-]2;devilc -a a.txt]1;devilca.txt => File added to tracking
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc -s
-]2;devilc -s]1;devilcadded: a.txt
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc -c "a added"
-]2;devilc -c "a added"]1;devilc[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddeviloc   c -l
-]2;devilc -l]1;devilcCommit: 6c0350c314c1e093c01f45d99567d6fa1e317f4ade573a41f8bb2df1
-Author: satvikc
-Email: satvikc@
-Date: 2012-11-11
-Msg: a added
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kvvim a.txt[1m [0m[0m 
-]2;vim a.txt]1;vim7[?47h[?1h=[1;49r[27m[m[38;5;252m[48;5;234m[H[2J[?25l[49;1H"a.txt" 7L, 12C[>c[1;1H[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m1 [m[38;5;252m[48;5;234m1[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m2 [m[38;5;252m[48;5;234m2[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[93m3 [m[38;5;252m[48;5;234m[4m3$                                                                          [m[38;5;252m[48;5;234m[4;1H[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m4 [m[38;5;252m[48;5;234m4[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m5 [m[38;5;252m[48;5;234m5[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m6 [m[38;5;252m[48;5;234m[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m7 [m[38;5;252m[48;5;234m[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- [m[38;5;252m[48;5;234m[8;2H[38;5;69m[48;5;233m~                                                                             [9;2H~                                                                             [10;2H~                                                                             [11;2H~                                                                             [12;2H~                                                                             [13;2H~                                                                             [14;2H~                                                                             [15;2H~                                                                             [16;2H~                                                                             [17;2H~                                                                             [18;2H~                                                                             [19;2H~                                                                             [20;2H~                                                                             [21;2H~                                                                             [22;2H~                                                                             [23;2H~                                                                             [24;2H~                                                                             [25;2H~                                                                             [26;2H~                                                                             [27;2H~                                                                             [28;2H~                                                                             [29;2H~                                                                             [30;2H~                                                                             [31;2H~                                                                             [32;2H~                                                                             [33;2H~                                                                             [34;2H~                                                                             [35;2H~                                                                             [36;2H~                                                                             [37;2H~                                                                             [38;2H~                                                                             [39;2H~                                                                             [40;2H~                                                                             [41;2H~                                                                             [42;2H~                                                                             [43;2H~                                                                             [44;2H~                                                                             [45;2H~                                                                             [46;2H~                                                                             [47;2H~                                                                             [m[38;5;252m[48;5;234m[48;1H[38;5;16m[48;5;153m[3,1 All] a.txt  (unix) [Git(master)]                                          ]2;vim: ~/acads/CS632/project/devil/test1/a.txt]1;a.txt[3;4H[?25h[?25l[m[38;5;252m[48;5;234m[49;69H~@k[3;4H[49;69H   [4;4H[3;2H[38;5;249m3 [m[38;5;252m[48;5;234m3[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m[3;6H[K[4;2H[93m4 [m[38;5;252m[48;5;234m[4m4$                                                                          [m[38;5;252m[48;5;234m[48;2H[38;5;16m[48;5;153m4[4;4H[?25h[?25l[m[38;5;252m[48;5;234m[49;69H~@k[4;4H[49;69H   [5;4H[4;2H[38;5;249m4 [m[38;5;252m[48;5;234m4[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m[4;6H[K[5;2H[93m5 [m[38;5;252m[48;5;234m[4m5$                                                                          [m[38;5;252m[48;5;234m[48;2H[38;5;16m[48;5;153m5[5;4H[?25h[?25l[m[38;5;252m[48;5;234m[49;69H^[[5;4H[?25h[?25l[49;69H  [5;4H[?25h[?25l[49;69Ho[5;4H[49;69H [6;4H[49;1H[38;5;252m[48;5;18m-- INSERT --[m[38;5;252m[48;5;234m[49;13H[K[5;2H[38;5;249m5 [m[38;5;252m[48;5;234m5[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m[5;6H[K[6;2H[93m6 [m[38;5;252m[48;5;234m[4m$                                                                           [m[38;5;252m[48;5;234m[8;2H[38;5;249m8 [m[38;5;252m[48;5;234m[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m[8;5H[K[48;2H[38;5;16m[48;5;153m6,1 All,+] a.txt  (unix) [Git(master)][6;4H[?25h[?25l[m[38;5;252m[48;5;234m[4m6$[m[38;5;252m[48;5;234m[48;4H[38;5;16m[48;5;153m2[6;5H[?25h[m[38;5;252m[48;5;234m[49;1H[K[6;4H[?25l[49;69H^[[6;4H[?25h[?25l[49;69H  [6;5H[48;4H[38;5;16m[48;5;153m1[6;4H[?25h[?25l[m[38;5;252m[48;5;234m[49;69H:[6;4H[49;69H[K[49;1H:[?25hw wq[?25l[?25h[?25l"a.txt" 8L, 14C [w]]2;vim a.txt]1;vim
-[39;49m[?1l>[?25h[2J[?47l8[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc -s
-]2;devilc -s]1;devilcmodified: a.txt
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddev d  ccat t a.txt[1m [0m[0m 
-]2;cat a.txt]1;cat1
-2
-3
-4
-5
-6
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc -c "a modified"
-]2;devilc -c "a modified"]1;devilc[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc -l
-]2;devilc -l]1;devilcCommit: 6c0350c314c1e093c01f45d99567d6fa1e317f4ade573a41f8bb2df1
-Author: satvikc
-Email: satvikc@
-Date: 2012-11-11
-Msg: a added
-
-
-Commit: 9dcef2631fb6e51b566f154832c554a1d62737876a9b3f7ff9ae9e91
-Author: satvikc
-Email: satvikc@
-Date: 2012-11-11
-Msg: a modified
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc --revert  6c0350c314c1e093c01f45d99567d6fa1e317f4a [Kdde573a41f8bb2df1
-]2;devilc --revert 6c0350c314c1e093c01f45d99567d6fa1e317f4ade573a41f8bb2df1]1;devilc[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccat a.txt[1m [0m[0m 
-]2;cat a.txt]1;cat1
-2
-3
-4
-5
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc --revert  9dcef2631fb6e51b566f154832c554a1d6273787 [K66a9b3f7ff9ae9e91
-]2;devilc --revert 9dcef2631fb6e51b566f154832c554a1d62737876a9b3f7ff9ae9e91]1;devilc[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccat a.txt[1m [0m[0m 
-]2;cat a.txt]1;cat1
-2
-3
-4
-5
-6
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccd ../test2[1m/[0m[0m 
-]2;cd ../test2]1;cd[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2]1;..t/devil/test2[0m[27m[24m[J[01;31m➜ [01;32m [36mtest2 [01;34mgit:([31mmaster[00m)[01;34m [00m[Klls
-]2;ls --color=tty]1;ls[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2]1;..t/devil/test2[0m[27m[24m[J[01;31m➜ [01;32m [36mtest2 [01;34mgit:([31mmaster[00m)[01;34m [00m[K
-bck-i-search: _[K[A[7C[4mc[24md ../test2[1B[19D[@c[63C  [A[A[22C[24mdevilc --[4mc[4ml[24mone localhost:7000/home/satvik/acads/CS632/project/devil/test1
-bck-i-search: cl_[K[A[A[14C[1C[4ml[4mo[24m[2B[18D[@o[61C  [3A[31C[2C[4mo[4mn[24m[2B[18Dn_[A[A[12C[3C[4mn[4me[24m[2B[18De_[A[A[11C[24mc[24ml[24mo[24mn[24me[2B[K[A[A[31C[2B]2;devilc --clone localhost:7000/home/satvik/acads/CS632/project/devil/test1]1;devilcEnter username:
-ajmera
-Enter email 
-ajmera# @
-a.txt => File added to tracking
-Pull Successfull
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2]1;..t/devil/test2[0m[27m[24m[J[01;31m➜ [01;32m [36mtest2 [01;34mgit:([31mmaster[00m)[01;34m [00m[Klls
-]2;ls --color=tty]1;ls[0m[01;34mtest1[0m
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2]1;..t/devil/test2[0m[27m[24m[J[01;31m➜ [01;32m [36mtest2 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccd test1[1m/[0m[0m 
-]2;cd test1]1;cd[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccat a.txt[1m [0m[0m 
-]2;cat a.txt]1;cat1
-2
-3
-4
-5
-6
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kvvim  v  ccd -
-]2;cd -]1;cd~/acads/CS632/project/devil/test2
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2]1;..t/devil/test2[0m[27m[24m[J[01;31m➜ [01;32m [36mtest2 [01;34mgit:([31mmaster[00m)[01;34m [00m[Klls
-]2;ls --color=tty]1;ls[0m[01;34mtest1[0m
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2]1;..t/devil/test2[0m[27m[24m[J[01;31m➜ [01;32m [36mtest2 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccd ../test
-[J[1;31mtest1[0m/  [J[1;31mtest2[0m/[J[A[0m[27m[24m[22Ccd ../test[K
-[Jzsh: correct '../test' to '../test1' [nyae]? n
-]2;cd ../test]1;cdcd:cd:10: no such file or directory: ../test
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2]1;..t/devil/test2[0m[27m[24m[J[01;31m➜ [01;32m [36mtest2 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kcd ../test1
-]2;cd ../test1]1;cd[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Klls
-]2;ls --color=tty]1;lsa.txt  [0m[01;34mDevil[0m
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kvvim a.txt[1m [0m[0m 
-]2;vim a.txt]1;vim7[?47h[?1h=[1;49r[27m[m[38;5;252m[48;5;234m[H[2J[?25l[49;1H"a.txt" 8L, 14C[>c[1;1H[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m1 [m[38;5;252m[48;5;234m1[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m2 [m[38;5;252m[48;5;234m2[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m3 [m[38;5;252m[48;5;234m3[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m4 [m[38;5;252m[48;5;234m4[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m5 [m[38;5;252m[48;5;234m5[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[93m6 [m[38;5;252m[48;5;234m[4m6$                                                                          [m[38;5;252m[48;5;234m[7;1H[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m7 [m[38;5;252m[48;5;234m[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m8 [m[38;5;252m[48;5;234m[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- [m[38;5;252m[48;5;234m[9;2H[38;5;69m[48;5;233m~                                                                             [10;2H~                                                                             [11;2H~                                                                             [12;2H~                                                                             [13;2H~                                                                             [14;2H~                                                                             [15;2H~                                                                             [16;2H~                                                                             [17;2H~                                                                             [18;2H~                                                                             [19;2H~                                                                             [20;2H~                                                                             [21;2H~                                                                             [22;2H~                                                                             [23;2H~                                                                             [24;2H~                                                                             [25;2H~                                                                             [26;2H~                                                                             [27;2H~                                                                             [28;2H~                                                                             [29;2H~                                                                             [30;2H~                                                                             [31;2H~                                                                             [32;2H~                                                                             [33;2H~                                                                             [34;2H~                                                                             [35;2H~                                                                             [36;2H~                                                                             [37;2H~                                                                             [38;2H~                                                                             [39;2H~                                                                             [40;2H~                                                                             [41;2H~                                                                             [42;2H~                                                                             [43;2H~                                                                             [44;2H~                                                                             [45;2H~                                                                             [46;2H~                                                                             [47;2H~                                                                             [m[38;5;252m[48;5;234m[48;1H[38;5;16m[48;5;153m[6,1 All] a.txt  (unix) [Git(master)]                                          ]2;vim: ~/acads/CS632/project/devil/test1/a.txt]1;a.txt[6;4H[?25h[?25l[m[38;5;252m[48;5;234m[49;1H[38;5;252m[48;5;18m-- INSERT --[m[38;5;252m[48;5;234m[49;13H[K[6;4H[?25h[?25l[48;4H[38;5;16m[48;5;153m2[6;5H[?25h[?25l[m[38;5;252m[48;5;234m[5;2H[93m5 [m[38;5;252m[48;5;234m[4m5$                                                                          [m[38;5;252m[48;5;234m[6;2H[38;5;249m6 [m[38;5;252m[48;5;234m6[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m[6;6H[K[48;2H[38;5;16m[48;5;153m5[5;5H[?25h[?25l[m[38;5;252m[48;5;234m[49;1H[K[49;1H=acp#onPopupPost()[49;1H[K[49;1H=acp#onPopupPost()[49;1H[K[49;1H[38;5;252m[48;5;18m-- Keyword completion (^N^P) [m[38;5;252m[48;5;234m[38;5;186m[48;5;88mPattern not found[m[38;5;252m[48;5;234m[49;1H[K[49;1H[38;5;252m[48;5;18m-- INSERT --[m[38;5;252m[48;5;234m[5;5H[4m6$[m[38;5;252m[48;5;234m[48;4H[38;5;16m[48;5;153m3 All,+] a.txt  (unix) [Git(master)][5;6H[?25h[m[38;5;252m[48;5;234m[49;1H[K[5;5H[?25l[49;69H^[[5;5H[?25h[?25l[49;69H  [5;6H[48;4H[38;5;16m[48;5;153m2[5;5H[?25h[?25l[m[38;5;252m[48;5;234m[49;69H:[5;5H[49;69H[K[49;1H:[?25hw wq[?25l[?25h[?25l"a.txt" 8L, 15C [w]]2;vim a.txt]1;vim
-[39;49m[?1l>[?25h[2J[?47l8[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Klls
-]2;ls --color=tty]1;lsa.txt  [0m[01;34mDevil[0m
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccata   a.txt[1m [0m[0m 
-]2;cat a.txt]1;cat1
-2
-3
-4
-56
-6
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc -c "a fure ther modified"
-]2;devilc -c "a further modified"]1;devilc[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test1]1;..t/devil/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccd ../test2[1m/[0m[0m/test1[1m/[0m[0m 
-]2;cd ../test2/test1]1;cd[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Klls
-]2;ls --color=tty]1;lsa.txt  [0m[01;34mDevil[0m
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccat a.txt[1m [0m[0m 
-]2;cat a.txt]1;cat1
-2
-3
-4
-5
-6
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kvvim a.txt[1m [0m[0m 
-]2;vim a.txt]1;vim7[?47h[?1h=[1;49r[27m[m[38;5;252m[48;5;234m[H[2J[?25l[49;1H"a.txt" 8L, 14C[>c[1;1H[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m1 [m[38;5;252m[48;5;234m1[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m2 [m[38;5;252m[48;5;234m2[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m3 [m[38;5;252m[48;5;234m3[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m4 [m[38;5;252m[48;5;234m4[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[93m5 [m[38;5;252m[48;5;234m[4m5$                                                                          [m[38;5;252m[48;5;234m[6;1H[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m6 [m[38;5;252m[48;5;234m6[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m7 [m[38;5;252m[48;5;234m[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m [m[38;5;252m[48;5;234m[38;5;249m8 [m[38;5;252m[48;5;234m[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m
-[38;5;254m[48;5;28m 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- [m[38;5;252m[48;5;234m[9;2H[38;5;69m[48;5;233m~                                                                             [10;2H~                                                                             [11;2H~                                                                             [12;2H~                                                                             [13;2H~                                                                             [14;2H~                                                                             [15;2H~                                                                             [16;2H~                                                                             [17;2H~                                                                             [18;2H~                                                                             [19;2H~                                                                             [20;2H~                                                                             [21;2H~                                                                             [22;2H~                                                                             [23;2H~                                                                             [24;2H~                                                                             [25;2H~                                                                             [26;2H~                                                                             [27;2H~                                                                             [28;2H~                                                                             [29;2H~                                                                             [30;2H~                                                                             [31;2H~                                                                             [32;2H~                                                                             [33;2H~                                                                             [34;2H~                                                                             [35;2H~                                                                             [36;2H~                                                                             [37;2H~                                                                             [38;2H~                                                                             [39;2H~                                                                             [40;2H~                                                                             [41;2H~                                                                             [42;2H~                                                                             [43;2H~                                                                             [44;2H~                                                                             [45;2H~                                                                             [46;2H~                                                                             [47;2H~                                                                             [m[38;5;252m[48;5;234m[48;1H[38;5;16m[48;5;153m[5,1 All] a.txt  (unix) [Git(master)]                                          ]2;vim: ~/acads/CS632/project/devil/test2/test1/a.txt]1;a.txt[5;4H[?25h[?25l[m[38;5;252m[48;5;234m[49;69H~@k[5;4H[49;69H   [4;4H[93m4 [m[38;5;252m[48;5;234m[4m4$                                                                          [m[38;5;252m[48;5;234m[5;2H[38;5;249m5 [m[38;5;252m[48;5;234m5[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m[5;6H[K[48;2H[38;5;16m[48;5;153m4[4;4H[?25h[?25l[m[38;5;252m[48;5;234m[49;69H~@k[4;4H[49;69H   [3;4H[93m3 [m[38;5;252m[48;5;234m[4m3$                                                                          [m[38;5;252m[48;5;234m[4;2H[38;5;249m4 [m[38;5;252m[48;5;234m4[38;5;69m[48;5;233m$[m[38;5;252m[48;5;234m[4;6H[K[48;2H[38;5;16m[48;5;153m3[3;4H[?25h[?25l[m[38;5;252m[48;5;234m[49;69H~@@[3;4H[49;69H   [3;4H[?25h[?25l[49;1H[38;5;252m[48;5;18m-- INSERT --[m[38;5;252m[48;5;234m[49;13H[K[3;4H[?25h[?25l[48;4H[38;5;16m[48;5;153m2[3;5H[?25h[?25l[m[38;5;252m[48;5;234m[49;1H[K[49;1H=acp#onPopupPost()[49;1H[K[49;1H=acp#onPopupPost()[49;1H[K[49;1H[38;5;252m[48;5;18m-- Keyword completion (^N^P) [m[38;5;252m[48;5;234m[38;5;186m[48;5;88mPattern not found[m[38;5;252m[48;5;234m[49;1H[K[49;1H[38;5;252m[48;5;18m-- INSERT --[m[38;5;252m[48;5;234m[3;5H[4m8$[m[38;5;252m[48;5;234m[48;4H[38;5;16m[48;5;153m3 All,+] a.txt  (unix) [Git(master)][3;6H[?25h[m[38;5;252m[48;5;234m[49;1H[K[3;5H[?25l[49;69H^[[3;5H[?25h[?25l[49;69H  [3;6H[48;4H[38;5;16m[48;5;153m2[3;5H[?25h[?25l[m[38;5;252m[48;5;234m[49;69H:[3;5H[49;69H[K[49;1H:[?25hw wq[?25l[?25h[?25l"a.txt" 8L, 15C [w]]2;vim a.txt]1;vim
-[39;49m[?1l>[?25h[2J[?47l8[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilkc  c -c "a changed"
-]2;devilc -c "a changed"]1;devilc[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kdded  
-bck-i-search: _[K[A[7Cdevilc -c "a [4mc[24mhanged"[1B[29D[@c[63C  [A[A[35C-[4mc[4ml[24mon[24me localhost:7000/home/satvik/acads/CS632/project/devil/test1
-bck-i-search: cl_[K[A[A[14C[1C[4ml[4mo[24m[2B[18D[@o[61C  [3A[31C[24mc[24ml[24mo[2B[8@failing [17Co_[A[A[4C[2Bn_[A[A[3C[2Be_[A[A[2C[2B[K[A[A[32C[1C[1C[1C[1C localhost:70[2C/home/satvik/acads/CS632/project/devil/test1 [A[19C localhost:70[2C/home/satvik/acads/CS632/project/devil/test1 [A[19C localhost:70[2C/home/satvik/acads/CS632/project/devil/test1 [A[19C localhost:70[2C/home/satvik/acads/CS632/project/devil/test1 [A[19C localhost:70[2C/home/satvik/acads/CS632/project/devil/test1 [A[19C[@p[46Ct/[@d[10C [A[19C[@u[45Cct[@/[11C [A[19C[@l[44Cec[@t[12C [A[19C[@l[43Cje[@c[13C [A[19C[2B]2;devilc --pull localhost:7000/home/satvik/acads/CS632/project/devil/test1]1;devilcMerged a.txt successfully
-
-Pull Successfull
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kccat a.,  , .txt[1m [0m[0m 
-]2;cat a.txt]1;cat1
-2
-38
-4
-56
-6
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Kddevilc -l
-]2;devilc -l]1;devilcCommit: 6c0350c314c1e093c01f45d99567d6fa1e317f4ade573a41f8bb2df1
-Author: satvikc
-Email: satvikc@
-Date: 2012-11-11
-Msg: a added
-
-
-Commit: 9dcef2631fb6e51b566f154832c554a1d62737876a9b3f7ff9ae9e91
-Author: satvikc
-Email: satvikc@
-Date: 2012-11-11
-Msg: a modified
-
-
-Commit: 7ed82777b27d7cce5deb58f35c23592ef85badfe65868f2fcce7173a
-Author: ajmera
-Email: ajmera@
-Date: 2012-11-11
-Msg: auto-merged successfull
-
-
-Commit: fd9fa8a96636482fc58822355a30a46029defb93d7cb9c7cbf297543
-Author: ajmera
-Email: ajmera@
-Date: 2012-11-11
-Msg: a changed
-
-
-Commit: 715088d85be155ba7ecdffbf55a05a1f3b9fc1be015a419f6ee1b3dc
-Author: satvikc
-Email: satvikc@
-Date: 2012-11-11
-Msg: a further modified
-
-
-Commit: 76ca026869eeee80159041c3eb05940698238f06ec067ae662935595
-Author: ajmera
-Email: ajmera@
-Date: 2012-11-11
-Msg: auto-merged successfull
-
-
-[1m[7m%[27m[1m[0m                                                                               ]2;satvikc@localhost: ~/acads/CS632/project/devil/test2/test1]1;..l/test2/test1[0m[27m[24m[J[01;31m➜ [01;32m [36mtest1 [01;34mgit:([31mmaster[00m)[01;34m [00m[Keexit
-]2;exit]1;exit
-Script done on Sun 11 Nov 2012 10:18:26 PM IST
