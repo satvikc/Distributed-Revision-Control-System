@@ -81,6 +81,10 @@ class DevilClient(pb.Root):
                         #print "opening file ",elem[0]
                         #print os.getcwd()
                         #print elem[0]
+                        try:
+                                os.makedirs(os.path.dirname(elem[0]))
+                        except:
+                                pass
                         files=open(elem[0],'w')
                         files.write(dicts['md_content'])
                         files.close()
@@ -92,6 +96,10 @@ class DevilClient(pb.Root):
                                         print("Merged "+elem[0]+" successfully\n")
                 else:
                         #print "Writing to elem[0]"
+                        try:
+                                os.makedirs(os.path.dirname(elem[0]))
+                        except:
+                                pass
                         files=open(elem[0],'w')
                         content=obj.getFiler(getLastCommit(commits),elem[0])
                         files.write(content)
