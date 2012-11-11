@@ -243,9 +243,60 @@ text width=60, text centered, rounded corners, minimum height=30]
   the space.
 \end{enumerate}
 \end {itemize}
-
 \end{frame}
 
-\subsection{Version Control Design}
+\subsection{Transfer of commits}
+\begin{frame}{Sending Commits}
+\begin{itemize}
+\item Minimize number of communications between peers.
+\item Only 3 messages required at the time of pull.
+\begin{enumerate}
+\item Commits to fetch.
+\item Commits compressed and sent.
+\end{enumerate}
+\item 3-Way merge startegy to merge the files.
+\end{itemize}
+\end{frame}
+
+\subsection{Structure}
+\begin{frame}{Sending Commits}
+\begin{figure}
+\centering
+\begin{tikzpicture}[ scale=0.4,transform shape]
+\tikzstyle{every node}=[circle,fill=green!40]
+\draw [fill=green!10] (-3,-3) rectangle (8,6);
+\draw (2.5,-3) node [above ,fill=green!10] {Peer system};
+\node (a) at (0,0) {Networking system} ;
+\node (b) at (5,0) {Code Revision system};
+\node (c) at (2,4) {Controller};
+\node (f) at (10,0) {Code files};
+\node (u) at (-5,0) {Other Peer};
+\draw [<->] (c) -- (a);
+\draw [<->] (c) -- (b);
+\draw [<->] (u) -- (a);
+\draw [<->] (b) -- (f);
+\end{tikzpicture}
+\caption{Highlevel design}
+\end{figure}
+\begin{itemize}
+\item Command line UI.
+\item Graphical User Interface (Not very flexible).
+\end{itemize}
+\end{frame}
+
+\section{Conclusion and Future work}
+\begin{frame}{Conclusion and Future work}
+\begin{itemize}
+\item Covers basic features of distributed version control system.
+\item Enhancements
+\begin{enumerate}
+\item Branch support.
+\item Automatic fetching of commits from added hosts.
+\item More flexible GUI and command line UI.
+\end{enumerate}
+\end{itemize}
+
+
+\end{frame}
 
 \end{document}
